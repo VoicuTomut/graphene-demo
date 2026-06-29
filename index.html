@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" class="palette-apeiron">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./apeiron-logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apeiron Agents · Graphene Photodetector</title>
+    <script>
+      // Apply theme pre-paint to avoid a flash (mirrors JSI's index.html).
+      (function () {
+        try {
+          var t = localStorage.getItem('apeiron-demo-theme') || 'light'
+          if (t === 'dark') document.documentElement.classList.add('dark')
+        } catch (e) {}
+      })()
+    </script>
+    <script type="module" crossorigin src="./assets/index-Da59jdPI.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BJKcmcw3.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

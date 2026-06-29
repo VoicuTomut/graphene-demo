@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>seebeck_e</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--page-background, #eef1f7);
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+      transition: background 0.18s ease;
+    }
+
+    .plot-shell {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      overflow: visible;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .plot-shell[data-theme="light"] {
+      --page-background: #F7F5EF;
+      --toolbar-background: #F7F5EF;
+      --toolbar-border: rgba(38, 49, 47, 0.14);
+      --toolbar-text: #26312F;
+      --button-background: #FFFFFF;
+      --button-border: rgba(38, 49, 47, 0.16);
+      --button-hover: #EEE9DE;
+    }
+
+    .plot-shell[data-theme="dark"] {
+      --page-background: #0F1715;
+      --toolbar-background: #14211E;
+      --toolbar-border: rgba(38, 83, 72, 0.44);
+      --toolbar-text: #F7F5EF;
+      --button-background: #1A2A26;
+      --button-border: rgba(74, 127, 113, 0.42);
+      --button-hover: #223530;
+    }
+
+    .plot-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: var(--toolbar-text);
+      margin-bottom: 12px;
+    }
+
+    .plot-toolbar button,
+    .plot-toolbar select {
+      appearance: none;
+      border: 1px solid var(--button-border);
+      border-radius: 999px;
+      background: var(--button-background);
+      color: var(--toolbar-text);
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+      font-size: 12px;
+      line-height: 1;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .plot-toolbar button {
+      font-weight: 500;
+    }
+
+    .plot-toolbar button.is-active {
+      background: var(--button-hover);
+      box-shadow: inset 0 0 0 1px var(--button-border);
+    }
+
+    .plot-toolbar button:hover,
+    .plot-toolbar select:hover {
+      background: var(--button-hover);
+      transform: translateY(-1px);
+    }
+
+    .plot-toolbar label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--toolbar-text);
+    }
+
+    .plot-toolbar input[type="range"] {
+      width: 108px;
+      accent-color: var(--toolbar-text);
+      cursor: pointer;
+    }
+
+    .plot-toolbar input[type="color"] {
+      width: 34px;
+      height: 34px;
+      padding: 2px;
+      border: 1px solid var(--button-border);
+      border-radius: 999px;
+      background: var(--button-background);
+      cursor: pointer;
+    }
+
+    .plot-toolbar .toolbar-value {
+      min-width: 2.5ch;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .plot-toolbar .toolbar-target {
+      font-size: 11px;
+      opacity: 0.78;
+      white-space: nowrap;
+    }
+
+    .plot-container {
+      background: transparent;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .plot-container .js-plotly-plot,
+    .plot-container .plotly-graph-div,
+    .plot-container .svg-container,
+    .plot-container .main-svg,
+    .plot-container .bg,
+    .plot-container rect.bg {
+      background: transparent !important;
+      fill: transparent !important;
+    }
+  </style>
+</head>
+<body>
+  <section class="plot-shell" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-shell" data-theme="light">
+    <div class="plot-toolbar">
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-theme">Dark Mode</button>
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-grid">Hide Grid</button>
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-reset">Reset View</button>
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-zero">Add Zero Line</button>
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-text">Add Text</button>
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-arrow">Add Arrow</button>
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-clear-selection">All Traces</button>
+      <button type="button" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-download">Download</button>
+      <label for="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-width">
+        Line Width
+        <input
+          id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-width"
+          type="range"
+          min="2"
+          max="6"
+          step="1"
+          value="3"
+        >
+        <span class="toolbar-value" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-width-value">3</span>
+      </label>
+      <label for="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-style">
+        Line Style
+        <select id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-style">
+          <option value="solid" selected>Solid</option>
+<option value="dash">Dash</option>
+<option value="dot">Dot</option>
+        </select>
+      </label>
+      <label for="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-color">
+        Line Color
+        <input id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-color" type="color" value="#000000">
+      </label>
+      
+      <label for="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-x-scale">
+        Figure Width
+        <select id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-x-scale">
+          <option value="0.4">0.4x</option>
+<option value="0.5">0.5x</option>
+<option value="0.65">0.65x</option>
+<option value="0.8">0.8x</option>
+<option value="1.0" selected>1x</option>
+        </select>
+      </label>
+      <span class="toolbar-target" id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-target">Target: all traces</span>
+    </div>
+    <div class="plot-container">
+      <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="../../plotly-3.3.1.min.js" integrity="sha256-4rD3fugVb/nVJYUv5Ky3v+fYXoouHaBSP20WIJuEiWg=" crossorigin="anonymous"></script>                <div id="magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7" class="plotly-graph-div" style="height:520px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7")) {                    Plotly.newPlot(                        "magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7",                        [{"hovertemplate":"%{x:.4g}, %{y:.4g}\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"royalblue","width":3},"mode":"lines","name":"Seebeck coefficient","x":{"dtype":"f8","bdata":"kJqNpnPq37\u002fM7S+JFeHfvwpB0mu319+\u002fR5R0TlnO37+E5xYx+8Tfv8E6uROdu9+\u002f\u002fo1b9j6y37874f3Y4Kjfv3g0oLuCn9+\u002ftYdCniSW37\u002fy2uSAxozfvy8uh2Nog9+\u002fbIEpRgp637+q1MsorHDfv+YnbgtOZ9+\u002fJHsQ7u9d379gzrLQkVTfv54hVbMzS9+\u002f2nT3ldVB378YyJl4dzjfv1UbPFsZL9+\u002fkm7ePbsl37\u002fPwYAgXRzfvwwVIwP\u002fEt+\u002fSWjF5aAJ37+Gu2fIQgDfv8MOCqvk9t6\u002fAGKsjYbt3r89tU5wKOTev3oI8VLK2t6\u002fuFuTNWzR3r\u002f0rjUYDsjevzIC2Pqvvt6\u002fblV63VG13r+sqBzA86vev+j7vqKVot6\u002fJk9hhTeZ3r9jogNo2Y\u002fev6D1pUp7ht6\u002f3UhILR193r8anOoPv3Pev1fvjPJgat6\u002flEIv1QJh3r\u002fRldG3pFfevw7pc5pGTt6\u002fSzwWfehE3r+Ij7hfijvev8biWkIsMt6\u002fAjb9JM4o3r9AiZ8HcB\u002fev3zcQeoRFt6\u002fui\u002fkzLMM3r\u002f2goavVQPevzTWKJL3+d2\u002fcSnLdJnw3b+ufG1XO+fdv+vPDzrd3d2\u002fKCOyHH\u002fU3b9ldlT\u002fIMvdv6LJ9uHCwd2\u002f3xyZxGS43b8ccDunBq\u002fdv1nD3Ymopd2\u002flhaAbEqc3b\u002fUaSJP7JLdvxC9xDGOid2\u002fThBnFDCA3b+KYwn30Xbdv8i2q9lzbd2\u002fBApOvBVk3b9CXfCet1rdv36wkoFZUd2\u002fvAM1ZPtH3b\u002f5VtdGnT7dvzaqeSk\u002fNd2\u002fc\u002f0bDOEr3b+wUL7ugiLdv+2jYNEkGd2\u002fKvcCtMYP3b9nSqWWaAbdv6SdR3kK\u002fdy\u002f4vDpW6zz3L8eRIw+Turcv1yXLiHw4Ny\u002fmOrQA5LX3L\u002fWPXPmM87cvxKRFcnVxNy\u002fUOS3q3e73L+MN1qOGbLcv8qK\u002fHC7qNy\u002fB96eU12f3L9EMUE2\u002f5Xcv4GE4xihjNy\u002fvteF+0KD3L\u002f7Kije5Hncvzh+ysCGcNy\u002fddFsoyhn3L+yJA+Gyl3cv\u002fB3sWhsVNy\u002fLMtTSw5L3L9qHvYtsEHcv6ZxmBBSONy\u002f5MQ68\u002fMu3L8gGN3VlSXcv15rf7g3HNy\u002fmr4hm9kS3L\u002fYEcR9ewncvxVlZmAdANy\u002fUrgIQ7\u002f227+PC6slYe3bv8xeTQgD5Nu\u002fCbLv6qTa279GBZLNRtHbv4NYNLDox9u\u002fwKvWkoq+27\u002f+\u002fnh1LLXbvzpSG1jOq9u\u002feKW9OnCi27+0+F8dEpnbv\u002fJLAgC0j9u\u002fLp+k4lWG279s8kbF93zbv6hF6aeZc9u\u002f5piLijtq278j7C1t3WDbv2A\u002f0E9\u002fV9u\u002fnZJyMiFO27\u002fa5RQVw0Tbvxc5t\u002fdkO9u\u002fVIxZ2gYy27+R3\u002fu8qCjbv84ynp9KH9u\u002fDIZAguwV279I2eJkjgzbv4YshUcwA9u\u002fwn8nKtL52r8A08kMdPDavzwmbO8V59q\u002fenkO0rfd2r+2zLC0WdTav\u002fQfU5f7ytq\u002fMXP1eZ3B2r9uxpdcP7jav6sZOj\u002fhrtq\u002f6GzcIYOl2r8lwH4EJZzav2ITIefGktq\u002fn2bDyWiJ2r\u002fcuWWsCoDavxoNCI+sdtq\u002fVmCqcU5t2r+Us0xU8GPav9AG7zaSWtq\u002fDlqRGTRR2r9KrTP81Ufav4gA1t53Ptq\u002fxFN4wRk12r8Cpxqkuyvavz\u002f6vIZdItq\u002ffE1faf8Y2r+5oAFMoQ\u002fav\u002fbzoy5DBtq\u002fM0dGEeX82b9wmujzhvPZv63titYo6tm\u002f6kAtucrg2b8olM+bbNfZv2TncX4Oztm\u002fojoUYbDE2b\u002fejbZDUrvZvxzhWCb0sdm\u002fWDT7CJao2b+Wh53rN5\u002fZv9PaP87Zldm\u002fEC7isHuM2b9NgYSTHYPZv4rUJna\u002fedm\u002fxyfJWGFw2b8Ee2s7A2fZv0HODR6lXdm\u002ffiGwAEdU2b+7dFLj6ErZv\u002fjH9MWKQdm\u002fNRuXqCw42b9ybjmLzi7Zv6\u002fB221wJdm\u002f7BR+UBIc2b8qaCAztBLZv2e7whVWCdm\u002fpA5l+Pf\u002f2L\u002fhYQfbmfbYvx61qb077di\u002fWwhMoN3j2L+YW+6Cf9rYv9WukGUh0di\u002fEgIzSMPH2L9PVdUqZb7Yv4yodw0Htdi\u002fyfsZ8Kir2L8GT7zSSqLYv0OiXrXsmNi\u002fgPUAmI6P2L+9SKN6MIbYv\u002fqbRV3SfNi\u002fOO\u002fnP3Rz2L91QooiFmrYv7KVLAW4YNi\u002f7+jO51lX2L8sPHHK+03Yv2mPE62dRNi\u002fpuK1jz872L\u002fjNVhy4THYvyCJ+lSDKNi\u002fXdycNyUf2L+aLz8axxXYv9eC4fxoDNi\u002fFNaD3woD2L9RKSbCrPnXv458yKRO8Ne\u002fy89qh\u002fDm178IIw1qkt3Xv0Z2r0w01Ne\u002fg8lRL9bK17\u002fAHPQReMHXv\u002f1vlvQZuNe\u002fOsM417uu1793Ftu5XaXXv7RpfZz\u002fm9e\u002f8bwff6GS178uEMJhQ4nXv2tjZETlf9e\u002fqLYGJ4d217\u002flCakJKW3XvyJdS+zKY9e\u002fX7Dtzmxa17+cA5CxDlHXv9lWMpSwR9e\u002fFqrUdlI+179U\u002fXZZ9DTXv5FQGTyWK9e\u002fzqO7Hjgi178L910B2hjXv0hKAOR7D9e\u002fhZ2ixh0G17\u002fC8ESpv\u002fzWv\u002f9D54th89a\u002fPJeJbgPq1r956itRpeDWv7Y9zjNH19a\u002f85BwFunN1r8w5BL5isTWv203tdssu9a\u002fqopXvs6x1r\u002fn3fmgcKjWvyQxnIMSn9a\u002fYoQ+ZrSV1r+f1+BIVozWv9wqgyv4gta\u002fGX4lDpp51r9W0cfwO3DWv5MkatPdZta\u002f0HcMtn9d1r8Ny66YIVTWv0oeUXvDSta\u002fh3HzXWVB1r\u002fExJVABzjWvwEYOCOpLta\u002fPmvaBUsl1r97vnzo7BvWv7gRH8uOEta\u002f9WTBrTAJ1r8yuGOQ0v\u002fVv3ALBnN09tW\u002frV6oVRbt1b\u002fqsUo4uOPVvycF7Rpa2tW\u002fZFiP\u002ffvQ1b+hqzHgncfVv97+08I\u002fvtW\u002fG1J2peG01b9YpRiIg6vVv5X4umolotW\u002f0ktdTceY1b8Pn\u002f8vaY\u002fVv0zyoRILhtW\u002fiUVE9ax81b\u002fGmObXTnPVvwPsiLrwadW\u002fQD8rnZJg1b9+ks1\u002fNFfVv7vlb2LWTdW\u002f+DgSRXhE1b81jLQnGjvVv3LfVgq8MdW\u002frzL57F0o1b\u002fshZvP\u002fx7VvynZPbKhFdW\u002fZizglEMM1b+jf4J35QLVv+DSJFqH+dS\u002fHSbHPCnw1L9aeWkfy+bUv5fMCwJt3dS\u002f1B+u5A7U1L8Rc1DHsMrUv07G8qlSwdS\u002fjBmVjPS31L\u002fJbDdvlq7UvwbA2VE4pdS\u002fQxN8NNqb1L+AZh4XfJLUv725wPkdidS\u002f+gxj3L9\u002f1L83YAW\u002fYXbUv3Szp6EDbdS\u002fsQZKhKVj1L\u002fuWexmR1rUvyutjknpUNS\u002faAAxLItH1L+lU9MOLT7Uv+KmdfHONNS\u002fH\u002foX1HAr1L9cTbq2EiLUv5qgXJm0GNS\u002f1\u002fP+e1YP1L8UR6Fe+AXUv1GaQ0Ga\u002fNO\u002fju3lIzzz07\u002fLQIgG3unTvwiUKul\u002f4NO\u002fRefMyyHX07+COm+uw83Tv7+NEZFlxNO\u002f\u002fOCzcwe70785NFZWqbHTv3aH+DhLqNO\u002fs9qaG+2e07\u002fwLT3+jpXTvy2B3+AwjNO\u002fatSBw9KC07+oJySmdHnTv+V6xogWcNO\u002fIs5oa7hm079fIQtOWl3Tv5x0rTD8U9O\u002f2cdPE55K078WG\u002fL1P0HTv1NulNjhN9O\u002fkME2u4Mu07\u002fNFNmdJSXTvwpoe4DHG9O\u002fR7sdY2kS07+EDsBFCwnTv8FhYiit\u002f9K\u002f\u002frQEC0\u002f20r87CKft8OzSv3hbSdCS49K\u002ftq7rsjTa0r\u002fzAY6V1tDSvzBVMHh4x9K\u002fbajSWhq+0r+q+3Q9vLTSv+dOFyBeq9K\u002fJKK5AgCi0r9h9VvloZjSv55I\u002fsdDj9K\u002f25ugquWF0r8Y70KNh3zSv1VC5W8pc9K\u002fkpWHUstp0r\u002fP6Ck1bWDSvww8zBcPV9K\u002fSY9u+rBN0r+G4hDdUkTSv8Q1s7\u002f0OtK\u002fAYlVopYx0r8+3PeEOCjSv3svmmfaHtK\u002fuII8SnwV0r\u002f11d4sHgzSvzIpgQ\u002fAAtK\u002fb3wj8mH50b+sz8XUA\u002fDRv+kiaLel5tG\u002fJnYKmkfd0b9jyax86dPRv6AcT1+LytG\u002f3W\u002fxQS3B0b8aw5Mkz7fRv1cWNgdxrtG\u002flGnY6RKl0b\u002fRvHrMtJvRvw8QHa9WktG\u002fTGO\u002fkfiI0b+JtmF0mn\u002fRv8YJBFc8dtG\u002fA12mOd5s0b9AsEgcgGPRv30D6\u002f4hWtG\u002fulaN4cNQ0b\u002f3qS\u002fEZUfRvzT90aYHPtG\u002fcVB0iak00b+uoxZsSyvRv+v2uE7tIdG\u002fKEpbMY8Y0b9lnf0TMQ\u002fRv6Lwn\u002fbSBdG\u002f30NC2XT80L8dl+S7FvPQv1rqhp646dC\u002flz0pgVrg0L\u002fUkMtj\u002fNbQvxHkbUaezdC\u002fTjcQKUDE0L+LirIL4rrQv8jdVO6DsdC\u002fBTH30CWo0L9ChJmzx57Qv3\u002fXO5ZpldC\u002fvCreeAuM0L\u002f5fYBbrYLQvzbRIj5PedC\u002fcyTFIPFv0L+wd2cDk2bQv+3KCeY0XdC\u002fKx6syNZT0L9ocU6reErQv6XE8I0aQdC\u002f4heTcLw30L8fazVTXi7Qv1y+1zUAJdC\u002fmRF6GKIb0L\u002fWZBz7QxLQvxO4vt3lCNC\u002foBbCgA\u002f\u002fz78avQZGU+zPv5RjSwuX2c+\u002fDgqQ0NrGz7+IsNSVHrTPvwJXGVtioc+\u002ffP1dIKaOz7\u002f2o6Ll6XvPv3JK56otac+\u002f7PArcHFWz79ml3A1tUPPv+A9tfr4MM+\u002fWuT5vzwez7\u002fUij6FgAvPv04xg0rE+M6\u002fyNfHDwjmzr9CfgzVS9POv7wkUZqPwM6\u002fNsuVX9Otzr+wcdokF5vOvyoYH+paiM6\u002fpL5jr551zr8eZah04mLOv5gL7TkmUM6\u002fErIx\u002f2k9zr+OWHbErSrOvwj\u002fuonxF86\u002fgqX\u002fTjUFzr\u002f8S0QUefLNv3byiNm8382\u002f8JjNngDNzb9qPxJkRLrNv+TlVimIp82\u002fXoyb7suUzb\u002fYMuCzD4LNv1LZJHlTb82\u002fzH9pPpdczb9GJq4D20nNv8DM8sgeN82\u002fOnM3jmIkzb+0GXxTphHNvy7AwBjq\u002fsy\u002fqmYF3i3szL8kDUqjcdnMv56zjmi1xsy\u002fGFrTLfmzzL+SABjzPKHMvwynXLiAjsy\u002fhk2hfcR7zL8A9OVCCGnMv3qaKghMVsy\u002f9EBvzY9DzL9u57OS0zDMv+iN+FcXHsy\u002fYjQ9HVsLzL\u002fc2oHinvjLv1aBxqfi5cu\u002f0CcLbSbTy79Kzk8yasDLv8Z0lPetrcu\u002fQBvZvPGay7+6wR2CNYjLvzRoYkd5dcu\u002frg6nDL1iy78otevRAFDLv6JbMJdEPcu\u002fHAJ1XIgqy7+WqLkhzBfLvxBP\u002fuYPBcu\u002fivVCrFPyyr8EnIdxl9\u002fKv35CzDbbzMq\u002f+OgQ\u002fB66yr9yj1XBYqfKv+w1moamlMq\u002fZtzeS+qByr\u002figiMRLm\u002fKv1wpaNZxXMq\u002f1s+sm7VJyr9QdvFg+TbKv8ocNiY9JMq\u002fRMN664ARyr++ab+wxP7JvzgQBHYI7Mm\u002fsrZIO0zZyb8sXY0AkMbJv6YD0sXTs8m\u002fIKoWixehyb+aUFtQW47JvxT3nxWfe8m\u002fjp3k2uJoyb8IRCmgJlbJv4LqbWVqQ8m\u002f\u002fpCyKq4wyb94N\u002ffv8R3Jv\u002fLdO7U1C8m\u002fbISAenn4yL\u002fmKsU\u002fveXIv2DRCQUB08i\u002f2ndOykTAyL9UHpOPiK3Iv87E11TMmsi\u002fSGscGhCIyL\u002fCEWHfU3XIvzy4paSXYsi\u002ftl7qadtPyL8wBS8vHz3Iv6qrc\u002fRiKsi\u002fJFK4uaYXyL+e+Px+6gTIvxqfQUQu8se\u002flEWGCXLfx78O7MrOtczHv4iSD5T5uce\u002fAjlUWT2nx79835gegZTHv\u002faF3ePEgce\u002fcCwiqQhvx7\u002fq0mZuTFzHv2R5qzOQSce\u002f3h\u002fw+NM2x79YxjS+FyTHv9JseYNbEce\u002fTBO+SJ\u002f+xr\u002fGuQIO4+vGv0BgR9Mm2ca\u002fugaMmGrGxr82rdBdrrPGv7BTFSPyoMa\u002fKvpZ6DWOxr+koJ6teXvGvx5H43K9aMa\u002fmO0nOAFWxr8SlGz9REPGv4w6scKIMMa\u002fBuH1h8wdxr+AhzpNEAvGv\u002fotfxJU+MW\u002fdNTD15flxb\u002fuegid29LFv2ghTWIfwMW\u002f4seRJ2Otxb9cbtbspprFv9YUG7Lqh8W\u002fUrtfdy51xb\u002fMYaQ8cmLFv0YI6QG2T8W\u002fwK4tx\u002fk8xb86VXKMPSrFv7T7tlGBF8W\u002fLqL7FsUExb+oSEDcCPLEvyLvhKFM38S\u002fnJXJZpDMxL8WPA4s1LnEv5DiUvEXp8S\u002fComXtluUxL+EL9x7n4HEv\u002f7VIEHjbsS\u002feHxlBidcxL\u002fyIqrLaknEv27J7pCuNsS\u002f6G8zVvIjxL9iFngbNhHEv9y8vOB5\u002fsO\u002fVmMBpr3rw7\u002fQCUZrAdnDv0qwijBFxsO\u002fxFbP9Yizw78+\u002fRO7zKDDv7ijWIAQjsO\u002fMkqdRVR7w7+s8OEKmGjDvyaXJtDbVcO\u002foD1rlR9Dw78c5K9aYzDDv5SK9B+nHcO\u002fEDE55eoKw7+I132qLvjCvwR+wm9y5cK\u002ffCQHNbbSwr\u002f4ykv6+b\u002fCv3BxkL89rcK\u002f7BfVhIGawr9kvhlKxYfCv+BkXg8JdcK\u002fWAuj1Exiwr\u002fUseeZkE\u002fCv1BYLF\u002fUPMK\u002fyP5wJBgqwr9EpbXpWxfCv7xL+q6fBMK\u002fOPI+dOPxwb+wmIM5J9\u002fBvyw\u002fyP5qzMG\u002fpOUMxK65wb8gjFGJ8qbBv5gylk42lMG\u002fFNnaE3qBwb+Mfx\u002fZvW7BvwgmZJ4BXMG\u002fgMyoY0VJwb\u002f8cu0oiTbBv3QZMu7MI8G\u002f8L92sxARwb9sZrt4VP7Av+QMAD6Y68C\u002fYLNEA9zYwL\u002fYWYnIH8bAv1QAzo1js8C\u002fzKYSU6egwL9ITVcY643Av8Dzm90ue8C\u002fPJrgonJowL+0QCVotlXAvzDnaS36QsC\u002fqI2u8j0wwL8kNPO3gR3Av5zaN33FCsC\u002fMAL5hBLwv78gT4IPmsq\u002fvxicC5ohpb+\u002fEOmUJKl\u002fv78ANh6vMFq\u002fv\u002fiCpzm4NL+\u002f6M8wxD8Pv7\u002fgHLpOx+m+v9BpQ9lOxL6\u002fyLbMY9aevr+4A1buXXm+v7BQ33jlU76\u002foJ1oA20uvr+Y6vGN9Ai+v4g3exh8472\u002fgIQEowO+vb9w0Y0ti5i9v2geF7gSc72\u002fWGugQppNvb9QuCnNISi9v0gFs1epAr2\u002fOFI84jDdvL8wn8VsuLe8vyDsTvc\u002fkry\u002fGDnYgcdsvL8IhmEMT0e8vwDT6pbWIby\u002f8B90IV78u7\u002fobP2r5da7v9i5hjZtsbu\u002f0AYQwfSLu7\u002fAU5lLfGa7v7igItYDQbu\u002fqO2rYIsbu7+gOjXrEva6v5CHvnWa0Lq\u002fiNRHACKrur+AIdGKqYW6v3BuWhUxYLq\u002faLvjn7g6ur9YCG0qQBW6v1BV9rTH77m\u002fQKJ\u002fP0\u002fKub847wjK1qS5vyg8klRef7m\u002fIIkb3+VZub8Q1qRpbTS5vwgjLvT0Drm\u002f+G+3fnzpuL\u002fwvEAJBMS4v+AJypOLnri\u002f2FZTHhN5uL\u002fIo9yomlO4v8DwZTMiLri\u002fuD3vvakIuL+oinhIMeO3v6DXAdO4vbe\u002fkCSLXUCYt7+IcRTox3K3v3i+nXJPTbe\u002fcAsn\u002fdYnt79gWLCHXgK3v1ilORLm3La\u002fSPLCnG23tr9AP0wn9ZG2vzCM1bF8bLa\u002fKNlePARHtr8YJujGiyG2vxBzcVET\u002fLW\u002fAMD625rWtb\u002f4DIRmIrG1v\u002fBZDfGpi7W\u002f4KaWezFmtb\u002fY8x8GuUC1v8hAqZBAG7W\u002fwI0yG8j1tL+w2rulT9C0v6gnRTDXqrS\u002fmHTOul6FtL+QwVdF5l+0v4AO4c9tOrS\u002feFtqWvUUtL9oqPPkfO+zv2D1fG8EyrO\u002fUEIG+ouks79Ij4+EE3+zvzjcGA+bWbO\u002fMCmimSI0s78odiskqg6zvxjDtK4x6bK\u002fEBA+ObnDsr8AXcfDQJ6yv\u002fipUE7IeLK\u002f6PbZ2E9Tsr\u002fgQ2Nj1y2yv9CQ7O1eCLK\u002fyN11eObisb+4Kv8Cbr2xv7B3iI31l7G\u002foMQRGH1ysb+YEZuiBE2xv4heJC2MJ7G\u002fgKuttxMCsb9w+DZCm9ywv2hFwMwit7C\u002fYJJJV6qRsL9Q39LhMWywv0gsXGy5RrC\u002fOHnl9kAhsL9gjN0Ckfevv0Am8BegrK+\u002fMMACLa9hr78QWhVCvhavvwD0J1fNy66\u002f4I06bNyArr\u002fQJ02B6zWuv7DBX5b66q2\u002foFtyqwmgrb+A9YTAGFWtv3CPl9UnCq2\u002fUCmq6ja\u002frL9Aw7z\u002fRXSsvzBdzxRVKay\u002fEPfhKWTeq78AkfQ+c5Orv+AqB1SCSKu\u002f0MQZaZH9qr+wXix+oLKqv6D4PpOvZ6q\u002fgJJRqL4cqr9wLGS9zdGpv1DGdtLchqm\u002fQGCJ5+s7qb8g+pv8+vCovxCUrhEKpqi\u002f8C3BJhlbqL\u002fgx9M7KBCov8Bh5lA3xae\u002fsPv4ZUZ6p7+glQt7VS+nv4AvHpBk5Ka\u002fcMkwpXOZpr9QY0O6gk6mv0D9Vc+RA6a\u002fIJdo5KC4pb8QMXv5r22lv\u002fDKjQ6\u002fIqW\u002f4GSgI87XpL\u002fA\u002frI43Yykv7CYxU3sQaS\u002fkDLYYvv2o7+AzOp3Cqyjv2Bm\u002fYwZYaO\u002fUAAQoigWo78wmiK3N8uivyA0NcxGgKK\u002fEM5H4VU1or\u002fwZ1r2ZOqhv+ABbQt0n6G\u002fwJt\u002fIINUob+wNZI1kgmhv5DPpEqhvqC\u002fgGm3X7BzoL9gA8p0vyigv6A6uROdu5+\u002fYG7ePbsln79AogNo2Y+evwDWKJL3+Z2\u002f4AlOvBVknb+gPXPmM86cv4BxmBBSOJy\u002fQKW9OnCim78g2eJkjgybvwANCI+sdpq\u002fwEAtucrgmb+gdFLj6EqZv2Codw0HtZi\u002fQNycNyUfmL8AEMJhQ4mXv+BD54th85a\u002foHcMtn9dlr+AqzHgnceVv0DfVgq8MZW\u002fIBN8NNqblL\u002fgRqFe+AWUv8B6xogWcJO\u002fgK7rsjTakr9g4hDdUkSSvyAWNgdxrpG\u002fAEpbMY8Ykb\u002fgfYBbrYKQv0BjSwuX2Y+\u002fAMuVX9Otjr+AMuCzD4KNv0CaKghMVoy\u002fwAF1XIgqi7+Aab+wxP6JvwDRCQUB04i\u002fwDhUWT2nh79AoJ6teXuGvwAI6QG2T4W\u002fgG8zVvIjhL9A132qLviCv8A+yP5qzIG\u002fgKYSU6eggL8AHLpOx+l+v4DrTvc\u002fkny\u002fALvjn7g6er8AinhIMeN3v4BZDfGpi3W\u002fgCiimSI0c78A+DZCm9xwvwCOl9UnCm2\u002fAC3BJhlbaL8Ay+p3CqxjvwDUKJL3+V2\u002fABB8NNqbVL8AnJ6teXtGvwCgKJL3+R2\u002fAOAokvf5PT8A\u002fDZCm9xQPwC+45+4Olo\u002fAEHI\u002fmrMYT8Aop6teXtmPwADdVyIKms\u002fAGVLC5fZbz8A4xDdUkRyPwAUfDTam3Q\u002fgETni2Hzdj+AdVLj6Ep5PwCmvTpwons\u002fANcokvf5fT\u002fAA8p0vyiAP0CcfyCDVIE\u002fgDQ1zEaAgj8Azep3CqyDP0BloCPO14Q\u002fwP1Vz5EDhj8Algt7VS+HP4AuwSYZW4g\u002fwMZ20tyGiT8AXyx+oLKKP4D34Slk3os\u002fwI+X1ScKjT9AKE2B6zWOP4DAAi2vYY8\u002fgCxcbLlGkD+g+DZCm9yQP+DEERh9cpE\u002fAJHs7V4Ikj9AXcfDQJ6SP2ApopkiNJM\u002foPV8bwTKkz\u002fAwVdF5l+UPwCOMhvI9ZQ\u002fIFoN8amLlT9gJujGiyGWP4Dywpxtt5Y\u002foL6dck9Nlz\u002fginhIMeOXPwBXUx4TeZg\u002fQCMu9PQOmT9g7wjK1qSZP6C745+4Opo\u002fwIe+dZrQmj8AVJlLfGabPyAgdCFe\u002fJs\u002fYOxO9z+SnD+AuCnNISidP8CEBKMDvp0\u002f4FDfeOVTnj8gHbpOx+meP0DplCSpf58\u002fwNo3fcUKoD\u002fQQCVotlWgP+CmElOnoKA\u002fAA0APpjroD8Qc+0oiTahPzDZ2hN6gaE\u002fQD\u002fI\u002fmrMoT9gpbXpWxeiP3ALo9RMYqI\u002fkHGQvz2toj+g132qLviiP8A9a5UfQ6M\u002f0KNYgBCOoz\u002fwCUZrAdmjPwBwM1byI6Q\u002fINYgQeNupD8wPA4s1LmkP1Ci+xbFBKU\u002fYAjpAbZPpT9wbtbsppqlP5DUw9eX5aU\u002foDqxwogwpj\u002fAoJ6teXumP9AGjJhqxqY\u002f8Gx5g1sRpz8A02ZuTFynPyA5VFk9p6c\u002fMJ9BRC7ypz9QBS8vHz2oP2BrHBoQiKg\u002fgNEJBQHTqD+QN\u002ffv8R2pP7Cd5NriaKk\u002fwAPSxdOzqT\u002fgab+wxP6pP\u002fDPrJu1Sao\u002fADaahqaUqj8gnIdxl9+qPzACdVyIKqs\u002fUGhiR3l1qz9gzk8yasCrP4A0PR1bC6w\u002fkJoqCExWrD+wABjzPKGsP8BmBd4t7Kw\u002f4MzyyB43rT\u002fwMuCzD4KtPxCZzZ4Aza0\u002fIP+6ifEXrj9AZah04mKuP1DLlV\u002fTra4\u002fcDGDSsT4rj+Al3A1tUOvP5D9XSCmjq8\u002fsGNLC5fZrz\u002fgZBz7QxKwP\u002fAXk3C8N7A\u002f+MoJ5jRdsD8IfoBbrYKwPxAx99AlqLA\u002fIORtRp7NsD8ol+S7FvOwPzhKWzGPGLE\u002fQP3Rpgc+sT9QsEgcgGOxP1hjv5H4iLE\u002faBY2B3GusT9wyax86dOxP4B8I\u002fJh+bE\u002fiC+aZ9oesj+Q4hDdUkSyP6CVh1LLabI\u002fqEj+x0OPsj+4+3Q9vLSyP8Cu67I02rI\u002f0GFiKK3\u002fsj\u002fYFNmdJSWzP+jHTxOeSrM\u002f8HrGiBZwsz8ALj3+jpWzPwjhs3MHu7M\u002fGJQq6X\u002fgsz8gR6Fe+AW0PzD6F9RwK7Q\u002fOK2OSelQtD9IYAW\u002fYXa0P1ATfDTam7Q\u002fWMbyqVLBtD9oeWkfy+a0P3As4JRDDLU\u002fgN9WCrwxtT+Iks1\u002fNFe1P5hFRPWsfLU\u002foPi6aiWitT+wqzHgnce1P7heqFUW7bU\u002fyBEfy44Stj\u002fQxJVABzi2P+B3DLZ\u002fXbY\u002f6CqDK\u002fiCtj\u002f43fmgcKi2PwCRcBbpzbY\u002fEETni2Hztj8Y910B2hi3Pyiq1HZSPrc\u002fMF1L7Mpjtz84EMJhQ4m3P0jDONe7rrc\u002fUHavTDTUtz9gKSbCrPm3P2jcnDclH7g\u002feI8TrZ1EuD+AQooiFmq4P5D1AJiOj7g\u002fmKh3DQe1uD+oW+6Cf9q4P7AOZfj3\u002f7g\u002fwMHbbXAluT\u002fIdFLj6Eq5P9gnyVhhcLk\u002f4No\u002fztmVuT\u002fwjbZDUru5P\u002fhALbnK4Lk\u002fAPSjLkMGuj8Qpxqkuyu6PxhakRk0Ubo\u002fKA0Ij6x2uj8wwH4EJZy6P0Bz9Xmdwbo\u002fSCZs7xXnuj9Y2eJkjgy7P2CMWdoGMrs\u002fcD\u002fQT39Xuz948kbF93y7P4ilvTpwors\u002fkFg0sOjHuz+gC6slYe27P6i+IZvZErw\u002fuHGYEFI4vD\u002fAJA+Gyl28P8jXhftCg7w\u002f2Ir8cLuovD\u002fgPXPmM868P\u002fDw6Vus87w\u002f+KNg0SQZvT8IV9dGnT69PxAKTrwVZL0\u002fIL3EMY6JvT8ocDunBq+9Pzgjshx\u002f1L0\u002fQNYokvf5vT9QiZ8HcB++P1g8Fn3oRL4\u002faO+M8mBqvj9wogNo2Y++P4BVet1Rtb4\u002fiAjxUsravj+Qu2fIQgC\u002fP6Bu3j27Jb8\u002fqCFVszNLvz+41MsorHC\u002fP8CHQp4klr8\u002f0Dq5E527vz\u002fY7S+JFeG\u002fP3RQU\u002f9GA8A\u002f+KkOOgMWwD+AA8p0vyjAPwRdha97O8A\u002fjLZA6jdOwD8QEPwk9GDAP5hpt1+wc8A\u002fHMNymmyGwD+kHC7VKJnAPyh26Q\u002flq8A\u002frM+kSqG+wD80KWCFXdHAP7iCG8AZ5MA\u002fQNzW+tX2wD\u002fENZI1kgnBP0yPTXBOHME\u002f0OgIqwovwT9YQsTlxkHBP9ybfyCDVME\u002fZPU6Wz9nwT\u002foTvaV+3nBP3CosdC3jME\u002f9AFtC3SfwT98WyhGMLLBPwC144DsxME\u002fiA6fu6jXwT8MaFr2ZOrBP5DBFTEh\u002fcE\u002fGBvRa90Pwj+cdIymmSLCPyTOR+FVNcI\u002fqCcDHBJIwj8wgb5WzlrCP7TaeZGKbcI\u002fPDQ1zEaAwj\u002fAjfAGA5PCP0jnq0G\u002fpcI\u002fzEBnfHu4wj9UmiK3N8vCP9jz3fHz3cI\u002fYE2ZLLDwwj\u002fkplRnbAPDP2wAEKIoFsM\u002f8FnL3OQowz90s4YXoTvDP\u002fwMQlJdTsM\u002fgGb9jBlhwz8IwLjH1XPDP4wZdAKShsM\u002fFHMvPU6Zwz+YzOp3CqzDPyAmprLGvsM\u002fpH9h7YLRwz8s2RwoP+TDP7Ay2GL79sM\u002fOIyTnbcJxD+85U7YcxzEP0Q\u002fChMwL8Q\u002fyJjFTexBxD9Q8oCIqFTEP9RLPMNkZ8Q\u002fWKX3\u002fSB6xD\u002fg\u002frI43YzEP2RYbnOZn8Q\u002f7LEprlWyxD9wC+XoEcXEP\u002fhkoCPO18Q\u002ffL5bXorqxD8EGBeZRv3EP4hx0tMCEMU\u002fEMuNDr8ixT+UJElJezXFPxx+BIQ3SMU\u002foNe\u002fvvNaxT8oMXv5r23FP6yKNjRsgMU\u002fNOTxbiiTxT+4Pa2p5KXFPzyXaOSguMU\u002fxPAjH13LxT9ISt9ZGd7FP9CjmpTV8MU\u002fVP1Vz5EDxj\u002fcVhEKThbGP2CwzEQKKcY\u002f6AmIf8Y7xj9sY0O6gk7GP\u002fS8\u002fvQ+YcY\u002feBa6L\u002ftzxj8AcHVqt4bGP4TJMKVzmcY\u002fDCPs3y+sxj+QfKca7L7GPxjWYlWo0cY\u002fnC8ekGTkxj8gidnKIPfGP6jilAXdCcc\u002fLDxQQJkcxz+0lQt7VS\u002fHPzjvxrURQsc\u002fwEiC8M1Uxz9Eoj0rimfHP8z7+GVGesc\u002fUFW0oAKNxz\u002fYrm\u002fbvp\u002fHP1wIKxZ7ssc\u002f5GHmUDfFxz9ou6GL89fHP\u002fAUXcav6sc\u002fdG4YAWz9xz\u002f8x9M7KBDIP4Ahj3bkIsg\u002fBHtKsaA1yD+M1AXsXEjIPxAuwSYZW8g\u002fmId8YdVtyD8c4TeckYDIP6Q689ZNk8g\u002fKJSuEQqmyD+w7WlMxrjIPzRHJYeCy8g\u002fvKDgwT7eyD9A+pv8+vDIP8hTVze3A8k\u002fTK0ScnMWyT\u002fUBs6sLynJP1hgiefrO8k\u002f4LlEIqhOyT9kEwBdZGHJP+hsu5cgdMk\u002fcMZ20tyGyT\u002f0HzINmZnJP3x57UdVrMk\u002fANOoghG\u002fyT+ILGS9zdHJPwyGH\u002fiJ5Mk\u002flN\u002faMkb3yT8YOZZtAgrKP6CSUai+HMo\u002fJOwM43ovyj+sRcgdN0LKPzCfg1jzVMo\u002fuPg+k69nyj88UvrNa3rKP8SrtQgojco\u002fSAVxQ+Sfyj\u002fMXix+oLLKP1S457hcxco\u002f2BGj8xjYyj9ga14u1erKP+TEGWmR\u002fco\u002fbB7Vo00Qyz\u002fwd5DeCSPLP3jRSxnGNcs\u002f\u002fCoHVIJIyz+EhMKOPlvLPwjefcn6bcs\u002fkDc5BLeAyz8UkfQ+c5PLP5zqr3kvpss\u002fIERrtOu4yz+onSbvp8vLPyz34Slk3ss\u002fsFCdZCDxyz84qlif3APMP7wDFNqYFsw\u002fRF3PFFUpzD\u002fItopPETzMP1AQRorNTsw\u002f1GkBxYlhzD9cw7z\u002fRXTMP+AceDoCh8w\u002faHYzdb6ZzD\u002fsz+6veqzMP3Qpquo2v8w\u002f+IJlJfPRzD+A3CBgr+TMPwQ23Jpr98w\u002fjI+X1ScKzT8Q6VIQ5BzNP5RCDkugL80\u002fHJzJhVxCzT+g9YTAGFXNPyhPQPvUZ80\u002frKj7NZF6zT80ArdwTY3NP7hbcqsJoM0\u002fQLUt5sWyzT\u002fEDukggsXNP0xopFs+2M0\u002f0MFflvrqzT9YGxvRtv3NP9x01gtzEM4\u002fZM6RRi8jzj\u002foJ02B6zXOP3CBCLynSM4\u002f9NrD9mNbzj94NH8xIG7OPwCOOmzcgM4\u002fhOf1ppiTzj8MQbHhVKbOP5CabBwRuc4\u002fGPQnV83Lzj+cTeORid7OPySnnsxF8c4\u002fqABaBwIEzz8wWhVCvhbPP7Sz0Hx6Kc8\u002fPA2MtzY8zz\u002fAZkfy8k7PP0jAAi2vYc8\u002fzBm+Z2t0zz9Uc3miJ4fPP9jMNN3jmc8\u002fXCbwF6Cszz\u002fkf6tSXL\u002fPP2jZZo0Y0s8\u002f8DIiyNTkzz90jN0CkffPP\u002f5yzJ4mBdA\u002fwB8qvIQO0D+EzIfZ4hfQP0Z55fZAIdA\u002fCiZDFJ8q0D\u002fM0qAx\u002fTPQP5B\u002f\u002fk5bPdA\u002fUixcbLlG0D8W2bmJF1DQP9iFF6d1WdA\u002fnDJ1xNNi0D9e39LhMWzQPyCMMP+PddA\u002f5DiOHO5+0D+m5es5TIjQP2qSSVeqkdA\u002fLD+ndAib0D\u002fw6wSSZqTQP7KYYq\u002fErdA\u002fdkXAzCK30D848h3qgMDQP\u002fyeewffydA\u002fvkvZJD3T0D+C+DZCm9zQP0SllF\u002f55dA\u002fCFLyfFfv0D\u002fK\u002fk+atfjQP46rrbcTAtE\u002fUFgL1XEL0T8SBWnyzxTRP9axxg8uHtE\u002fmF4kLYwn0T9cC4JK6jDRPx6432dIOtE\u002f4mQ9haZD0T+kEZuiBE3RP2i++L9iVtE\u002fKmtW3cBf0T\u002fuF7T6HmnRP7DEERh9ctE\u002fdHFvNdt70T82Hs1SOYXRP\u002frKKnCXjtE\u002fvHeIjfWX0T+AJOaqU6HRP0LRQ8ixqtE\u002fBH6h5Q+00T\u002fIKv8Cbr3RP4rXXCDMxtE\u002fToS6PSrQ0T8QMRhbiNnRP9TddXjm4tE\u002florTlUTs0T9aNzGzovXRPxzkjtAA\u002f9E\u002f4JDs7V4I0j+iPUoLvRHSP2bqpygbG9I\u002fKJcFRnkk0j\u002fsQ2Nj1y3SP67wwIA1N9I\u002fcp0enpNA0j80Sny78UnSP\u002fb22dhPU9I\u002fuqM39q1c0j98UJUTDGbSP0D98jBqb9I\u002fAqpQTsh40j\u002fGVq5rJoLSP4gDDImEi9I\u002fTLBppuKU0j8OXcfDQJ7SP9IJJeGep9I\u002flLaC\u002fvyw0j9YY+AbW7rSPxoQPjm5w9I\u002f3rybVhfN0j+gaflzddbSP2QWV5HT39I\u002fJsO0rjHp0j\u002fobxLMj\u002fLSP6wccOnt+9I\u002fbsnNBkwF0z8ydiskqg7TP\u002fQiiUEIGNM\u002fuM\u002fmXmYh0z96fER8xCrTPz4popkiNNM\u002fANb\u002ftoA90z\u002fEgl3U3kbTP4Yvu\u002fE8UNM\u002fStwYD5tZ0z8MiXYs+WLTP9A11ElXbNM\u002fkuIxZ7V10z9Wj4+EE3\u002fTPxg87aFxiNM\u002f2uhKv8+R0z+elajcLZvTP2BCBvqLpNM\u002fJO9jF+qt0z\u002fmm8E0SLfTP6pIH1KmwNM\u002fbPV8bwTK0z8wotqMYtPTP\u002fJOOKrA3NM\u002ftvuVxx7m0z94qPPkfO\u002fTPzxVUQLb+NM\u002f\u002fgGvHzkC1D\u002fCrgw9lwvUP4Rbalr1FNQ\u002fSAjId1Me1D8KtSWVsSfUP8xhg7IPMdQ\u002fkA7hz2061D9Suz7ty0PUPxZonAoqTdQ\u002f2BT6J4hW1D+cwVdF5l\u002fUP15utWJEadQ\u002fIhsTgKJy1D\u002fkx3CdAHzUP6h0zrpehdQ\u002faiEs2LyO1D8uzon1GpjUP\u002fB65xJ5odQ\u002ftCdFMNeq1D921KJNNbTUPzqBAGuTvdQ\u002f\u002fC1eiPHG1D++2rulT9DUP4KHGcOt2dQ\u002fRDR34Avj1D8I4dT9aezUP8qNMhvI9dQ\u002fjjqQOCb\u002f1D9Q5+1VhAjVPxSUS3PiEdU\u002f1kCpkEAb1T+a7QauniTVP1yaZMv8LdU\u002fIEfC6Fo31T\u002fi8x8GuUDVP6agfSMXStU\u002faE3bQHVT1T8s+jhe01zVP+6mlnsxZtU\u002fsFP0mI9v1T90AFK27XjVPzatr9NLgtU\u002f+lkN8amL1T+8BmsOCJXVP4CzyCtmntU\u002fQmAmScSn1T8GDYRmIrHVP8i54YOAutU\u002fjGY\u002fod7D1T9OE52+PM3VPxLA+tua1tU\u002f1GxY+fjf1T+YGbYWV+nVP1rGEzS18tU\u002fHnNxURP81T\u002fgH89ucQXWP6LMLIzPDtY\u002fZnmKqS0Y1j8oJujGiyHWP+zSReTpKtY\u002frn+jAUg01j9yLAEfpj3WPzTZXjwER9Y\u002f+IW8WWJQ1j+6Mhp3wFnWP37fd5QeY9Y\u002fQozVsXxs1j8COTPP2nXWP8blkOw4f9Y\u002fipLuCZeI1j9OP0wn9ZHWPw7sqURTm9Y\u002f0pgHYrGk1j+WRWV\u002fD67WP1bywpxtt9Y\u002fGp8gusvA1j\u002feS37XKcrWP6L42\u002fSH09Y\u002fYqU5Eubc1j8mUpcvRObWP+r+9Eyi79Y\u002frqtSagD51j9uWLCHXgLXPzIFDqW8C9c\u002f9rFrwhoV1z+6XsnfeB7XP3oLJ\u002f3WJ9c\u002fPriEGjUx1z8CZeI3kzrXP8YRQFXxQ9c\u002fhr6dck9N1z9Ka\u002fuPrVbXPw4YWa0LYNc\u002fzsS2ymlp1z+ScRTox3LXP1YecgUmfNc\u002fGsvPIoSF1z\u002fady1A4o7XP54ki11AmNc\u002fYtHoep6h1z8mfkaY\u002fKrXP+YqpLVatNc\u002fqtcB07i91z9uhF\u002fwFsfXPzIxvQ110Nc\u002f8t0aK9PZ1z+2inhIMePXP3o31mWP7Nc\u002fOuQzg+311z\u002f+kJGgS\u002f\u002fXP8I9772pCNg\u002fhupM2wcS2D9Gl6r4ZRvYPwpECBbEJNg\u002fzvBlMyIu2D+SncNQgDfYP1JKIW7eQNg\u002fFvd+izxK2D\u002fao9yomlPYP55QOsb4XNg\u002fXv2X41Zm2D8iqvUAtW\u002fYP+ZWUx4Tedg\u002fqgOxO3GC2D9qsA5Zz4vYPy5dbHYtldg\u002f8gnKk4ue2D+ytiex6afYP3Zjhc5Hsdg\u002fOhDj66W62D\u002f+vEAJBMTYP75pniZizdg\u002fghb8Q8DW2D9Gw1lhHuDYPwpwt3586dg\u002fyhwVnNry2D+OyXK5OPzYP1J20NaWBdk\u002fFiMu9PQO2T\u002fWz4sRUxjZP5p86S6xIdk\u002fXilHTA8r2T8e1qRpbTTZP+KCAofLPdk\u002fpi9gpClH2T9q3L3Bh1DZPyqJG9\u002flWdk\u002f7jV5\u002fENj2T+y4tYZomzZP3aPNDcAdtk\u002fNjySVF5\u002f2T\u002f66O9xvIjZP76VTY8aktk\u002fgkKrrHib2T9C7wjK1qTZPwacZuc0rtk\u002fykjEBJO32T+O9SEi8cDZP06ifz9Pytk\u002fEk\u002fdXK3T2T\u002fW+zp6C93ZP5aomJdp5tk\u002fWlX2tMfv2T8eAlTSJfnZP+Kuse+DAto\u002folsPDeIL2j9mCG0qQBXaPyq1ykeeHto\u002f7mEoZfwn2j+uDoaCWjHaP3K745+4Oto\u002fNmhBvRZE2j\u002f6FJ\u002fadE3aP7rB\u002fPfSVto\u002ffm5aFTFg2j9CG7gyj2naPwLIFVDtcto\u002fxnRzbUt82j+KIdGKqYXaP07OLqgHj9o\u002fDnuMxWWY2j\u002fSJ+riw6HaP5bURwAiq9o\u002fWoGlHYC02j8aLgM73r3aP97aYFg8x9o\u002fooe+dZrQ2j9mNByT+NnaPybhebBW49o\u002f6o3XzbTs2j+uOjXrEvbaP3Lnkghx\u002f9o\u002fMpTwJc8I2z\u002f2QE5DLRLbP7rtq2CLG9s\u002fepoJfukk2z8+R2ebRy7bPwL0xLilN9s\u002fxqAi1gNB2z+GTYDzYUrbP0r63RDAU9s\u002fDqc7Lh5d2z\u002fSU5lLfGbbP5IA92jab9s\u002fVq1Uhjh52z8aWrKjloLbP94GEMH0i9s\u002fnrNt3lKV2z9iYMv7sJ7bPyYNKRkPqNs\u002f5rmGNm2x2z+qZuRTy7rbP24TQnEpxNs\u002fMsCfjofN2z\u002fybP2r5dbbP7YZW8lD4Ns\u002fesa45qHp2z8+cxYEAPPbP\u002f4fdCFe\u002fNs\u002fwszRPrwF3D+GeS9cGg\u002fcP0omjXl4GNw\u002fCtPqltYh3D\u002fOf0i0NCvcP5IsptGSNNw\u002fVtkD7\u002fA93D8WhmEMT0fcP9oyvymtUNw\u002fnt8cRwta3D9ejHpkaWPcPyI52IHHbNw\u002f5uU1nyV23D+qkpO8g3\u002fcP2o\u002f8dnhiNw\u002fLuxO9z+S3D\u002fymKwUnpvcP7ZFCjL8pNw\u002fdvJnT1qu3D86n8VsuLfcP\u002f5LI4oWwdw\u002fwviAp3TK3D+Cpd7E0tPcP0ZSPOIw3dw\u002fCv+Z\u002f47m3D\u002fKq\u002fcc7e\u002fcP45YVTpL+dw\u002fUgWzV6kC3T8WshB1BwzdP9ZebpJlFd0\u002fmgvMr8Me3T9euCnNISjdPyJlh+p\u002fMd0\u002f4hHlB9463T+mvkIlPETdP2proEKaTd0\u002fLhj+X\u002fhW3T\u002fuxFt9VmDdP7JxuZq0ad0\u002fdh4XuBJz3T86y3TVcHzdP\u002fp30vLOhd0\u002fviQwEC2P3T+C0Y0ti5jdP0J+60rpod0\u002fBitJaEer3T\u002fK16aFpbTdP46EBKMDvt0\u002fTjFiwGHH3T8S3r\u002fdv9DdP9aKHfsd2t0\u002fmjd7GHzj3T9a5Ng12uzdPx6RNlM49t0\u002f4j2UcJb\u002f3T+m6vGN9AjeP2aXT6tSEt4\u002fKkStyLAb3j\u002fu8ArmDiXeP66daANtLt4\u002fckrGIMs33j829yM+KUHeP\u002fqjgVuHSt4\u002fulDfeOVT3j9+\u002fTyWQ13eP0KqmrOhZt4\u002fBlf40P9v3j\u002fGA1buXXneP4qwswu8gt4\u002fTl0RKRqM3j8SCm9GeJXeP9K2zGPWnt4\u002flmMqgTSo3j9aEIiekrHePx695bvwut4\u002f3mlD2U7E3j+iFqH2rM3eP2bD\u002fhML194\u002fJnBcMWng3j\u002fqHLpOx+neP67JF2wl894\u002fcnZ1iYP83j8yI9Om4QXfP\u002fbPMMQ\u002fD98\u002funyO4Z0Y3z9+Kez++yHfPz7WSRxaK98\u002fAoOnObg03z\u002fGLwVXFj7fP4rcYnR0R98\u002fSonAkdJQ3z8ONh6vMFrfP9Lie8yOY98\u002fko\u002fZ6exs3z9WPDcHS3bfPxrplCSpf98\u002f3pXyQQeJ3z+eQlBfZZLfP2LvrXzDm98\u002fJpwLmiGl3z\u002fqSGm3f67fP6r1xtTdt98\u002fbqIk8jvB3z8yT4IPmsrfP\u002fb73yz4098\u002ftqg9Slbd3z96VZtntObfPw=="},"y":{"dtype":"f8","bdata":"YPlXbIPnOkBg+Vdsg+c6QGD5V2yD5zpAYPlXbIPnOkBg+Vdsg+c6QGD5V2yD5zpAYPlXbIPnOkBg+Vdsg+c6QGD5V2yD5zpAUPnlc+MiO0BQ+eVz4yI7QFD55XPjIjtAUPnlc+MiO0BQ+eVz4yI7QFD55XPjIjtAUPnlc+MiO0BQ+ax3k0A7QFD5rHeTQDtAUPmsd5NAO0BI+XN7Q147QEj5c3tDXjtASPlze0NeO0BI+XN7Q147QEj5c3tDXjtASPlze0NeO0BI+XN7Q147QED5On\u002fzeztAOPkBg6OZO0A4+QGDo5k7QDj5AYOjmTtAOPkBg6OZO0A4+QGDo5k7QDj5AYOjmTtAOPkBg6OZO0A4+QGDo5k7QDj5AYOjmTtAKPmPigPVO0Ao+Y+KA9U7QCj5j4oD1TtAKPmPigPVO0Ao+Y+KA9U7QCj5j4oD1TtAKPmPigPVO0Ao+Y+KA9U7QCD5Vo6z8jtAIPlWjrPyO0AY+R2SYxA8QBj5HZJjEDxAGPkdkmMQPEAY+R2SYxA8QBj5HZJjEDxAGPkdkmMQPEAY+R2SYxA8QBD55JUTLjxACPmrmcNLPEAI+auZw0s8QAj5q5nDSzxACPmrmcNLPEAI+auZw0s8QAj5q5nDSzxACPmrmcNLPEAI+auZw0s8QAD5OaEjhzxAAPk5oSOHPEAA+TmhI4c8QAD5OaEjhzxAAPk5oSOHPEAA+TmhI4c8QAD5OaEjhzxAAPk5oSOHPEAA+TmhI4c8QPj4AKXTpDxA8PjHqIPCPEDw+Meog8I8QPD4x6iDwjxA8PjHqIPCPEDw+Meog8I8QPD4x6iDwjxA6PiOrDPgPEDo+I6sM+A8QOD4VbDj\u002fTxA4PhVsOP9PEDg+FWw4\u002f08QOD4VbDj\u002fTxA4PhVsOP9PEDg+FWw4\u002f08QOD4VbDj\u002fTxA0Pjjt0M5PUDQ+OO3Qzk9QND447dDOT1A0Pjjt0M5PUDQ+OO3Qzk9QND447dDOT1A0Pjjt0M5PUDQ+OO3Qzk9QND447dDOT1AwPhxv6N0PUDA+HG\u002fo3Q9QMD4cb+jdD1AwPhxv6N0PUDA+HG\u002fo3Q9QMD4cb+jdD1AwPhxv6N0PUC4+DjDU5I9QLj4OMNTkj1AsPj\u002fxgOwPUCw+P\u002fGA7A9QLD4\u002f8YDsD1AsPj\u002fxgOwPUCw+P\u002fGA7A9QLD4\u002f8YDsD1AsPj\u002fxgOwPUCo+I3OY+s9QKj4jc5j6z1AqPiNzmPrPUCo+I3OY+s9QKj4jc5j6z1AqPiNzmPrPUCo+I3OY+s9QKj4jc5j6z1AmPgb1sMmPkCY+BvWwyY+QJj4G9bDJj5AmPgb1sMmPkCY+BvWwyY+QJj4G9bDJj5AmPgb1sMmPkCQ+OLZc0Q+QJD44tlzRD5AiPip3SNiPkCI+KndI2I+QIj4qd0jYj5AiPip3SNiPkCI+KndI2I+QIj4qd0jYj5AgPhw4dN\u002fPkB4+Dflg50+QHj4N+WDnT5AePg35YOdPkB4+Dflg50+QHj4N+WDnT5AePg35YOdPkB4+Dflg50+QGj4xezj2D5AaPjF7OPYPkBo+MXs49g+QGj4xezj2D5AaPjF7OPYPkBo+MXs49g+QGj4xezj2D5AaPjF7OPYPkBg+Izwk\u002fY+QGD4U\u002fRDFD9AYPhT9EMUP0Bg+FP0QxQ\u002fQGD4U\u002fRDFD9AYPhT9EMUP0Bg+FP0QxQ\u002fQFj4GvjzMT9AUPjh+6NPP0BQ+OH7o08\u002fQFD44fujTz9AUPjh+6NPP0BQ+OH7o08\u002fQFD44fujTz9AUPjh+6NPP0BA+G8DBIs\u002fQED4bwMEiz9AQPhvAwSLP0BA+G8DBIs\u002fQED4bwMEiz9AQPhvAwSLP0BA+G8DBIs\u002fQED4bwMEiz9AMPj9CmTGP0Aw+P0KZMY\u002fQDD4\u002fQpkxj9AMPj9CmTGP0Aw+P0KZMY\u002fQDD4\u002fQpkxj9AKPjEDhTkP0AQ\u002fEUJ4gBAQBD8RQniAEBAEPxFCeIAQEAQ\u002fEUJ4gBAQBD8RQniAEBAEPxFCeIAQEAI\u002fAwNkh5AQAj8DA2SHkBACPwMDZIeQEAI\u002fAwNkh5AQAj8DA2SHkBACPwMDZIeQEAI\u002fAwNkh5AQAj8DA2SHkBABPzTEEI8QEAE\u002fNMQQjxAQAT80xBCPEBABPzTEEI8QEAE\u002fNMQQjxAQAT80xBCPEBAAHy3EhpLQEAAfLcSGktAQPz7mhTyWUBA\u002fPuaFPJZQED8+5oU8llAQPz7mhTyWUBA\u002fPuaFPJZQED4e34WymhAQPT7YRiid0BA9PthGKJ3QED0+2EYondAQPT7YRiid0BA9PthGKJ3QED0+2EYondAQPT7YRiid0BA7PsoHFKVQEDs+ygcUpVAQOz7KBxSlUBA7PsoHFKVQEDs+ygcUpVAQOz7KBxSlUBA7PsoHFKVQEDk++8fArNAQOT77x8Cs0BA5PvvHwKzQEDk++8fArNAQOT77x8Cs0BA5PvvHwKzQEDge9Mh2sFAQOD7tiOy0EBA4Pu2I7LQQEDg+7YjstBAQOD7tiOy0EBA4Pu2I7LQQEDg+7YjstBAQNj7fSdi7kBA2Pt9J2LuQEDY+30nYu5AQNj7fSdi7kBA2Pt9J2LuQEDY+30nYu5AQNj7fSdi7kBA0PtEKxIMQUDQ+0QrEgxBQND7RCsSDEFA0PtEKxIMQUDQ+0QrEgxBQND7RCsSDEFAzHsoLeoaQUDI+wsvwilBQMj7Cy\u002fCKUFAyPsLL8IpQUDI+wsvwilBQMj7Cy\u002fCKUFAyPsLL8IpQUDA+9IyckdBQMD70jJyR0FAwPvSMnJHQUDA+9IyckdBQMD70jJyR0FAwPvSMnJHQUDA+9IyckdBQLj7mTYiZUFAuPuZNiJlQUC4+5k2ImVBQLj7mTYiZUFAuPuZNiJlQUC4+5k2ImVBQLh7fTj6c0FAtPtgOtKCQUC0+2A60oJBQLT7YDrSgkFAtPtgOtKCQUC0+2A60oJBQLB7RDyqkUFArPsnPoKgQUCs+yc+gqBBQKz7Jz6CoEFArPsnPoKgQUCs+yc+gqBBQKz7Jz6CoEFApPvuQTK+QUCk++5BMr5BQKT77kEyvkFApPvuQTK+QUCk++5BMr5BQKT77kEyvkFApPvuQTK+QUCc+7VF4ttBQJz7tUXi20FAnPu1ReLbQUCc+7VF4ttBQJz7tUXi20FAmnuZR7rqQUCae5lHuupBQJb7fEmS+UFAlvt8SZL5QUCW+3xJkvlBQJb7fEmS+UFAlvt8SZL5QUCO+0NNQhdCQI77Q01CF0JAjvtDTUIXQkCO+0NNQhdCQI77Q01CF0JAjvtDTUIXQkCKeydPGiZCQIb7ClHyNEJAhvsKUfI0QkCG+wpR8jRCQIb7ClHyNEJAhvsKUfI0QkCEe+5SykNCQID70VSiUkJAgPvRVKJSQkCA+9FUolJCQID70VSiUkJAgPvRVKJSQkB8e7VWemFCQHj7mFhScEJAePuYWFJwQkB4+5hYUnBCQHj7mFhScEJAePuYWFJwQkB4+5hYUnBCQHL7X1wCjkJAcvtfXAKOQkBy+19cAo5CQHL7X1wCjkJAcvtfXAKOQkBy+19cAo5CQG57Q17anEJAavsmYLKrQkBq+yZgsqtCQGr7JmCyq0JAavsmYLKrQkBq+yZgsqtCQGZ7CmKKukJAYvvtY2LJQkBi++1jYslCQGL77WNiyUJAYvvtY2LJQkBi++1jYslCQFz7tGcS50JAXPu0ZxLnQkBc+7RnEudCQFz7tGcS50JAXPu0ZxLnQkBc+7RnEudCQFz7tGcS50JAVPt7a8IEQ0BU+3trwgRDQFT7e2vCBENAVPt7a8IEQ0BU+3trwgRDQFB7X22aE0NATPtCb3IiQ0BM+0JvciJDQEz7Qm9yIkNATPtCb3IiQ0BM+0JvciJDQEb7CXMiQENARvsJcyJAQ0BG+wlzIkBDQEb7CXMiQENARvsJcyJAQ0BG+wlzIkBDQEb7CXMiQENAPvvQdtJdQ0A++9B20l1DQD770HbSXUNAPvvQdtJdQ0A++9B20l1DQDp7tHiqbENAOnu0eKpsQ0A4+5d6gntDQDj7l3qCe0NAOPuXeoJ7Q0A4+5d6gntDQDj7l3qCe0NAMPtefjKZQ0Aw+15+MplDQDD7Xn4ymUNAMPtefjKZQ0Aw+15+MplDQDD7Xn4ymUNAKPslguK2Q0Ao+yWC4rZDQCj7JYLitkNAKPslguK2Q0Ao+yWC4rZDQCj7JYLitkNAJHsJhLrFQ0Ai++yFktRDQCL77IWS1ENAIvvshZLUQ0Ai++yFktRDQCL77IWS1ENAHnvQh2rjQ0Aa+7OJQvJDQBr7s4lC8kNAGvuziULyQ0Aa+7OJQvJDQBr7s4lC8kNAFnuXixoBREAS+3qN8g9EQBL7eo3yD0RAEvt6jfIPREAS+3qN8g9EQBL7eo3yD0RAEvt6jfIPREAM+0GRoi1EQAz7QZGiLURADPtBkaItREAM+0GRoi1EQAz7QZGiLURACHslk3o8REAIeyWTejxEQAT7CJVSS0RABPsIlVJLREAE+wiVUktEQAT7CJVSS0RABPsIlVJLRED8+s+YAmlEQPz6z5gCaURA\u002fPrPmAJpRED8+s+YAmlEQPz6z5gCaURA\u002fPrPmAJpRED8+s+YAmlEQPb6lpyyhkRA9vqWnLKGRED2+pacsoZEQPb6lpyyhkRA9vqWnLKGREDyenqeipVEQPJ6ep6KlURA7vpdoGKkREDu+l2gYqREQO76XaBipERA7vpdoGKkREDu+l2gYqREQOj6JKQSwkRA6PokpBLCREDo+iSkEsJEQOj6JKQSwkRA6PokpBLCREDo+iSkEsJEQOj6JKQSwkRA4Prrp8LfREDg+uunwt9EQOD666fC30RA4Prrp8LfREDg+uunwt9EQOD666fC30RA3HrPqZruREDY+rKrcv1EQNj6sqty\u002fURA2Pqyq3L9REDY+rKrcv1EQNj6sqty\u002fURA2Pqyq3L9REDUepatSgxFQNL6ea8iG0VA0vp5ryIbRUDS+nmvIhtFQNL6ea8iG0VA0vp5ryIbRUDS+nmvIhtFQMr6QLPSOEVAyvpAs9I4RUDK+kCz0jhFQMr6QLPSOEVAyvpAs9I4RUDK+kCz0jhFQMr6QLPSOEVAyvpAs9I4RUDC+ge3glZFQML6B7eCVkVAwvoHt4JWRUDC+ge3glZFQML6B7eCVkVAwvoHt4JWRUDAeuu4WmVFQMB667haZUVAvPrOujJ0RUC8+s66MnRFQLz6zroydEVAvPrOujJ0RUC8+s66MnRFQLz6zroydEVAtPqVvuKRRUC0+pW+4pFFQLT6lb7ikUVAtPqVvuKRRUC0+pW+4pFFQLT6lb7ikUVAtPqVvuKRRUC0+pW+4pFFQLT6lb7ikUVArPpcwpKvRUCs+lzCkq9FQKz6XMKSr0VArPpcwpKvRUCs+lzCkq9FQKz6XMKSr0VArPpcwpKvRUCqekDEar5FQKp6QMRqvkVAqnpAxGq+RUCm+iPGQs1FQKb6I8ZCzUVApvojxkLNRUCm+iPGQs1FQKb6I8ZCzUVApvojxkLNRUCm+iPGQs1FQKJ6B8ga3EVAnvrqyfLqRUCe+urJ8upFQJ766sny6kVAnvrqyfLqRUCe+urJ8upFQJ766sny6kVAnvrqyfLqRUCe+urJ8upFQJ766sny6kVAnvrqyfLqRUCY+rHNoghGQJj6sc2iCEZAmPqxzaIIRkCY+rHNoghGQJj6sc2iCEZAmPqxzaIIRkCY+rHNoghGQJj6sc2iCEZAmPqxzaIIRkCY+rHNoghGQJj6sc2iCEZAmPqxzaIIRkCUepXPehdGQJR6lc96F0ZAkPp40VImRkCQ+njRUiZGQJD6eNFSJkZAkPp40VImRkCQ+njRUiZGQJD6eNFSJkZAkPp40VImRkCQ+njRUiZGQJD6eNFSJkZAkPp40VImRkCQ+njRUiZGQJD6eNFSJkZAjHpc0yo1RkCMelzTKjVGQIx6XNMqNUZAjHpc0yo1RkCMelzTKjVGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIj6P9UCREZAiPo\u002f1QJERkCI+j\u002fVAkRGQIx6XNMqNUZAjHpc0yo1RkCMelzTKjVGQIx6XNMqNUZAkPp40VImRkCQ+njRUiZGQJD6eNFSJkZAkPp40VImRkCQ+njRUiZGQJD6eNFSJkZAkPp40VImRkCQ+njRUiZGQJD6eNFSJkZAkPp40VImRkCUepXPehdGQJR6lc96F0ZAmPqxzaIIRkCY+rHNoghGQJj6sc2iCEZAmPqxzaIIRkCY+rHNoghGQJj6sc2iCEZAmPqxzaIIRkCY+rHNoghGQJ766sny6kVAnvrqyfLqRUCe+urJ8upFQJ766sny6kVAnvrqyfLqRUCe+urJ8upFQJ766sny6kVAonoHyBrcRUCm+iPGQs1FQKb6I8ZCzUVApvojxkLNRUCm+iPGQs1FQKb6I8ZCzUVAqnpAxGq+RUCs+lzCkq9FQKz6XMKSr0VArPpcwpKvRUCs+lzCkq9FQKz6XMKSr0VAtPqVvuKRRUC0+pW+4pFFQLT6lb7ikUVAtPqVvuKRRUC0+pW+4pFFQLz6zroydEVAvPrOujJ0RUC8+s66MnRFQLz6zroydEVAwvoHt4JWRUDC+ge3glZFQML6B7eCVkVAwvoHt4JWRUDK+kCz0jhFQMr6QLPSOEVAyvpAs9I4RUDK+kCz0jhFQM56XbH6KUVA0vp5ryIbRUDS+nmvIhtFQNL6ea8iG0VA2Pqyq3L9REDY+rKrcv1EQNj6sqty\u002fURA4Prrp8LfREDg+uunwt9EQOD666fC30RA5HoIpurQREDo+iSkEsJEQOj6JKQSwkRA6npBojqzREDu+l2gYqREQO76XaBipERA8np6noqVRED2+pacsoZEQPp6s5rad0RA+nqzmtp3RED8+s+YAmlEQAB77JYqWkRABPsIlVJLREAE+wiVUktEQAh7JZN6PERADPtBkaItREAQe16Pyh5EQBL7eo3yD0RAEvt6jfIPREAWe5eLGgFEQBr7s4lC8kNAHnvQh2rjQ0Ai++yFktRDQCR7CYS6xUNAKPslguK2Q0Ao+yWC4rZDQCx7QoAKqENAMPtefjKZQ0A0e3t8WopDQDj7l3qCe0NAOnu0eKpsQ0A++9B20l1DQEJ77XT6TkNARvsJcyJAQ0BKeyZxSjFDQEz7Qm9yIkNAUHtfbZoTQ0BU+3trwgRDQFh7mGnq9UJAXPu0ZxLnQkBee9FlOthCQGZ7CmKKukJAZnsKYoq6QkBue0Ne2pxCQG57Q17anEJAdHt8Wip\u002fQkB0e3xaKn9CQHx7tVZ6YUJAhHvuUspDQkCEe+5SykNCQIp7J08aJkJAinsnTxomQkCSe2BLaghCQJp7mUe66kFAmnuZR7rqQUCge9JDCs1BQKT77kEyvkFAqHsLQFqvQUCwe0Q8qpFBQLT7YDrSgkFAuHt9OPpzQUC8e7Y0SlZBQMD70jJyR0FAxHvvMJo4QUDMeygt6hpBQND7RCsSDEFA1HthKTr9QEDce5olit9AQOD7tiOy0EBA5PvvHwKzQEDoewweKqRAQPB7RRp6hkBA9PthGKJ3QED8+5oU8llAQAT80xBCPEBACHzwDmotQEAI\u002fAwNkh5AQBD8RQniAEBAMPj9CmTGP0A4+DYHtKg\u002fQED4bwMEiz9AUPjh+6NPP0Bg+FP0QxQ\u002fQGj4xezj2D5AcPj+6DO7PkB4+Dflg50+QIj4qd0jYj5AmPgb1sMmPkCo+I3OY+s9QLD4\u002f8YDsD1AuPg4w1OSPUDI+Kq781Y9QND447dDOT1A4PhVsOP9PEDw+Meog8I8QAD5OaEjhzxACPmrmcNLPEAY+R2SYxA8QCD5Vo6z8jtAMPnIhlO3O0BA+Tp\u002f83s7QFD5rHeTQDtAWPkecDMFO0Bg+Vdsg+c6QHj5AmFzjjpAiPl0WRNTOkCQ+a1VYzU6QKD5H04D+jlAsPnKQvOgOUC4+QM\u002fQ4M5QMj5dTfjRzlA4PkgLNPuOEDo+VkoI9E4QPD5yyDDlThACPp2FbM8OEAY+ugNUwE4QCj6WgbzxTdAOPrM\u002fpKKN0BA+j73Mk83QFD6sO\u002fSEzdAYPoi6HLYNkBw+pTgEp02QID6BtmyYTZAkPp40VImNkCY+urJ8uo1QKj6XMKSrzVAuPrOujJ0NUDI+kCz0jg1QOD666fC3zRA6PpdoGKkNED4+s+YAmk0QAj7QZGiLTRAIPvshZLUM0Aw+15+MpkzQDj70HbSXTNASPtCb3IiM0Bg++1jYskyQHD7X1wCjjJAePvRVKJSMkCQ+3xJkvkxQKD77kEyvjFAsPtgOtKCMUDI+wsvwikxQND7fSdi7jBA4PvvHwKzMEDw+2EYoncwQAj8DA2SHjBAMPhvAwSLL0BQ+FP0QxQvQHD4N+WDnS5AkPgb1sMmLkCw+P\u002fGA7AtQND4VbDj\u002fSxAAPmrmcNLLEAg+Y+KA9UrQED5c3tDXitAcPnJZCOsKkCQ+R9OA\u002fopQLD5Az9DgylA0PnnL4MMKUAA+j0ZY1ooQCD6kwJDqCdAQPp384IxJ0Bg+lvkwromQJD6sc2iCCZAsPoHt4JWJUDQ+uunwt8kQPD6z5gCaSRAIPslguK2I0BQ+3trwgQjQGD7X1wCjiJAgPtDTUIXIkDA+wsvwikhQOD77x8CsyBA8PvTEEI8IEBA+FP0QxQfQKD4\u002f8YDsB1A4PjHqIPCHEAg+Y+KA9UbQID5H04D+hlAwPnnL4MMGUAA+q8RAx8YQGD6W+TCuhZAoPoHt4JWFUDg+s+YAmkUQED7e2vCBBNAoPsnPoKgEUDA++8fArMQQED4N+WDnQ5AAPmPigPVC0CA+R9OA\u002foJQMD5rxEDHwhAgPoHt4JWBUBA+19cAo4CQMD77x8CswBAgPiPigPV+z8A+j\u002fVAkT2PwD7X1wCjvI\u002fAPkfTgP66T8A9v\u002fGA7DdPwD0\u002f8YDsM0\u002fAAAAxwOwvb8A+v\u002fGA7DdvwD7P9UCROa\u002fAPr\u002fxgOw7b+A+8+YAmn0vwD6H04D+vm\u002fAPn\u002fxgOw\u002fb8A\u002fCc+gqABwED7z5gCaQTAwPo\u002f1QJEBsAA+ucvgwwJwID5j4oD1QvAAPn\u002fxgOwDcCA+G8DBIsPwOD7Cy\u002fCKRHAoPtfXAKOEsBg+5d6gnsTwAD766fC3xTAoPo\u002f1QJEFsBg+nfzgjEXwCD6yyDDlRjAwPkfTgP6GcCA+Vdsg+cawCD5q5nDSxzA4Pj\u002fxgOwHcCg+Dflg50ewGD4bwMEix\u002fAAPxhGKJ3IMDg+wsvwikhwMD7Jz6CoCHAkPvRVKJSIsBg+3trwgQjwFD7l3qCeyPAMPuziULyI8AQ+8+YAmkkwND6B7eCViXAwPojxkLNJcCg+j\u002fVAkQmwHD66esi9ibAQPqTAkOoJ8Ag+q8RAx8owBD6yyDDlSjA8PnnL4MMKcCw+R9OA\u002fopwJD5O13DcCrAgPlXbIPnKsBg+XN7Q14rwED5j4oD1SvAAPnHqIPCLMDg+OO3QzktwND4\u002f8YDsC3AoPip3SNiLsCA+MXs49guwFD4bwMEiy\u002fAIPxFCeIAMMAQ\u002fNMQQjwwwAD8YRiidzDA6Pu2I7LQMMDY+0QrEgwxwND70jJyRzHAuPsnPoKgMcCo+7VF4tsxwJD7ClHyNDLAgPuYWFJwMsB4+yZgsqsywGj7tGcS5zLAWPtCb3IiM8BA+5d6gnszwDD7JYLitjPAIPt6jfIPNMAQ+wiVUks0wAD7lpyyhjTA8PokpBLCNMDg+rKrcv00wNj6QLPSODXAyPrOujJ0NcC4+lzCkq81wKj66sny6jXAmPp40VImNsCQ+gbZsmE2wID6lOASnTbAaPrp6yL2NsBQ+j73Mk83wED6zP6SijfAOPpaBvPFN8Ao+ugNUwE4wBj6dhWzPDjACPoEHRN4OMD4+ZIkc7M4wPD5WSgj0TjA6PnnL4MMOcDY+XU340c5wMj5Az9DgznAuPmRRqO+OcCo+R9OA\u002fo5wKD5rVVjNTrAkPk7XcNwOsCA+clkI6w6wHD5V2yD5zrAYPnlc+MiO8BQ+XN7Q147wFD5On\u002fzezvAQPnIhlO3O8Aw+VaOs\u002fI7wCj5HZJjEDzAGPmrmcNLPMAI+TmhI4c8wAD5x6iDwjzA8PhVsOP9PMDg+OO3Qzk9wNj4qrvzVj3AyPg4w1OSPcDA+P\u002fGA7A9wLD4jc5j6z3AqPgb1sMmPsCY+KndI2I+wIj4N+WDnT7AiPg35YOdPsB4+MXs49g+wGj4U\u002fRDFD\u002fAYPjh+6NPP8BY+Kj\u002fU20\u002fwEj4Nge0qD\u002fAQPj9CmTGP8AY\u002fEUJ4gBAwBD8DA2SHkDADHzwDmotQMAI\u002fNMQQjxAwAT8mhTyWUDAAHx+FspoQMD4e0UaeoZAwPT7KBxSlUDA7PvvHwKzQMDoe9Mh2sFAwOB7miWK30DA4Pt9J2LuQMDce2EpOv1AwNR7KC3qGkHA0PsLL8IpQcDMe+8wmjhBwMR7tjRKVkHAwPuZNiJlQcC8e304+nNBwLh7RDyqkUHAtPsnPoKgQcCwewtAWq9BwKh70kMKzUHAqHvSQwrNQcCge5lHuupBwJh7YEtqCELAmHtgS2oIQsCUeydPGiZCwJR7J08aJkLAjHvuUspDQsCEe7VWemFCwIR7tVZ6YULAfHt8Wip\u002fQsB8e3xaKn9CwHR7Q17anELAdHtDXtqcQsBsewpiirpCwGx7CmKKukLAaHvRZTrYQsBk+7RnEudCwGB7mGnq9ULAXPt7a8IEQ8BYe19tmhNDwFT7Qm9yIkPAUHsmcUoxQ8BM+wlzIkBDwEh77XT6TkPARPvQdtJdQ8BEe7R4qmxDwED7l3qCe0PAPHt7fFqKQ8A8e3t8WopDwDj7Xn4ymUPANHtCgAqoQ8Aw+yWC4rZDwCx7CYS6xUPAKPvshZLUQ8Ake9CHauNDwCD7s4lC8kPAIPuziULyQ8Ace5eLGgFEwBz7eo3yD0TAHPt6jfIPRMAU+0GRoi1EwBT7QZGiLUTAEHslk3o8RMAM+wiVUktEwAz7CJVSS0TACHvslipaRMAE+8+YAmlEwAT7z5gCaUTA\u002fPqWnLKGRMD8+pacsoZEwPz6lpyyhkTA9PpdoGKkRMD0+l2gYqREwPT6XaBipETA9HpBojqzRMDw+iSkEsJEwPD6JKQSwkTA7HoIpurQRMDo+uunwt9EwOj666fC30TA6Prrp8LfRMDg+rKrcv1EwOD6sqty\u002fUTA4Pqyq3L9RMDcepatSgxFwNj6ea8iG0XA2Pp5ryIbRcDY+nmvIhtFwNj6ea8iG0XA0PpAs9I4RcDQ+kCz0jhFwND6QLPSOEXA0PpAs9I4RcDM+ge3glZFwMz6B7eCVkXAzPoHt4JWRcDM+ge3glZFwMT6zroydEXAxPrOujJ0RcDE+s66MnRFwMT6zroydEXAxPrOujJ0RcDAerK8CoNFwLz6lb7ikUXAvPqVvuKRRcC8+pW+4pFFwLz6lb7ikUXAvPqVvuKRRcC4ennAuqBFwLT6XMKSr0XAtPpcwpKvRcC0+lzCkq9FwLT6XMKSr0XAtPpcwpKvRcCwekDEar5FwKz6I8ZCzUXArPojxkLNRcCs+iPGQs1FwKz6I8ZCzUXArPojxkLNRcCs+iPGQs1FwKz6I8ZCzUXApPrqyfLqRcCk+urJ8upFwKT66sny6kXApPrqyfLqRcCk+urJ8upFwKT66sny6kXApPrqyfLqRcCk+urJ8upFwKT66sny6kXApPrqyfLqRcCk+urJ8upFwKR6zsvK+UXAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAnHqVz3oXRsCcepXPehdGwJx6lc96F0bAnHqVz3oXRsCcepXPehdGwJx6lc96F0bAnHqVz3oXRsCcepXPehdGwJx6lc96F0bAmPp40VImRsCY+njRUiZGwJj6eNFSJkbAmPp40VImRsCY+njRUiZGwJj6eNFSJkbAmPp40VImRsCY+njRUiZGwJj6eNFSJkbAmPp40VImRsCY+njRUiZGwJj6eNFSJkbAmPp40VImRsCY+njRUiZGwJj6eNFSJkbAmPp40VImRsCY+njRUiZGwJx6lc96F0bAnHqVz3oXRsCcepXPehdGwJx6lc96F0bAnHqVz3oXRsCcepXPehdGwJx6lc96F0bAnHqVz3oXRsCcepXPehdGwJx6lc96F0bAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbAoPqxzaIIRsCg+rHNoghGwKD6sc2iCEbApHrOy8r5RcCk+urJ8upFwKT66sny6kXApPrqyfLqRcCk+urJ8upFwKT66sny6kXApPrqyfLqRcCk+urJ8upFwKT66sny6kXApPrqyfLqRcCk+urJ8upFwKT66sny6kXApPrqyfLqRcCk+urJ8upFwKT66sny6kXArPojxkLNRcCs+iPGQs1FwKz6I8ZCzUXArPojxkLNRcCs+iPGQs1FwKz6I8ZCzUXArPojxkLNRcCs+iPGQs1FwKz6I8ZCzUXArPojxkLNRcCwekDEar5FwLB6QMRqvkXAtPpcwpKvRcC0+lzCkq9FwLT6XMKSr0XAtPpcwpKvRcC0+lzCkq9FwLT6XMKSr0XAtPpcwpKvRcC4ennAuqBFwLh6ecC6oEXAvPqVvuKRRcC8+pW+4pFFwLz6lb7ikUXAvPqVvuKRRcC8+pW+4pFFwLz6lb7ikUXAvPqVvuKRRcC8+pW+4pFFwMT6zroydEXAxPrOujJ0RcDE+s66MnRFwMT6zroydEXAxPrOujJ0RcDE+s66MnRFwMT6zroydEXAxPrOujJ0RcDE+s66MnRFwMz6B7eCVkXAzPoHt4JWRcDM+ge3glZFwMz6B7eCVkXAzPoHt4JWRcDM+ge3glZFwMx6JLWqR0XAzHoktapHRcDQ+kCz0jhFwND6QLPSOEXA0PpAs9I4RcDQ+kCz0jhFwND6QLPSOEXA0PpAs9I4RcDQ+kCz0jhFwNj6ea8iG0XA2Pp5ryIbRcDY+nmvIhtFwNj6ea8iG0XA2Pp5ryIbRcDY+nmvIhtFwNj6ea8iG0XA3HqWrUoMRcDg+rKrcv1EwOD6sqty\u002fUTA4Pqyq3L9RMDg+rKrcv1EwOD6sqty\u002fUTA4Pqyq3L9RMDkes+pmu5EwOj666fC30TA6Prrp8LfRMDo+uunwt9EwOj666fC30TA6Prrp8LfRMDo+uunwt9EwPD6JKQSwkTA8PokpBLCRMDw+iSkEsJEwPD6JKQSwkTA8PokpBLCRMDw+iSkEsJEwPD6JKQSwkTA9PpdoGKkRMD0+l2gYqREwPT6XaBipETA9PpdoGKkRMD0+l2gYqREwPT6XaBipETA+Hp6noqVRMD8+pacsoZEwPz6lpyyhkTA\u002fPqWnLKGRMD8+pacsoZEwPz6lpyyhkTAAHuzmtp3RMAAe7Oa2ndEwAT7z5gCaUTABPvPmAJpRMAE+8+YAmlEwAT7z5gCaUTABPvPmAJpRMAM+wiVUktEwAz7CJVSS0TADPsIlVJLRMAM+wiVUktEwAz7CJVSS0TADPsIlVJLRMAM+wiVUktEwBT7QZGiLUTAFPtBkaItRMAU+0GRoi1EwBT7QZGiLUTAFPtBkaItRMAYe16Pyh5EwBh7Xo\u002fKHkTAHPt6jfIPRMAc+3qN8g9EwBz7eo3yD0TAHPt6jfIPRMAc+3qN8g9EwCD7s4lC8kPAIPuziULyQ8Ag+7OJQvJDwCD7s4lC8kPAIPuziULyQ8Ag+7OJQvJDwCD7s4lC8kPAKPvshZLUQ8Ao++yFktRDwCj77IWS1EPAKPvshZLUQ8Ao++yFktRDwCx7CYS6xUPAMPslguK2Q8Aw+yWC4rZDwDD7JYLitkPAMPslguK2Q8Aw+yWC4rZDwDR7QoAKqEPAOPtefjKZQ8A4+15+MplDwDj7Xn4ymUPAOPtefjKZQ8A4+15+MplDwDj7Xn4ymUPAQPuXeoJ7Q8BA+5d6gntDwED7l3qCe0PAQPuXeoJ7Q8BA+5d6gntDwED7l3qCe0PARHu0eKpsQ8BE+9B20l1DwET70HbSXUPARPvQdtJdQ8BE+9B20l1DwET70HbSXUPASHvtdPpOQ8BM+wlzIkBDwEz7CXMiQEPATPsJcyJAQ8BM+wlzIkBDwEz7CXMiQEPAVPtCb3IiQ8BU+0JvciJDwFT7Qm9yIkPAVPtCb3IiQ8BU+0JvciJDwFT7Qm9yIkPAVPtCb3IiQ8Bc+3trwgRDwFz7e2vCBEPAXPt7a8IEQ8Bc+3trwgRDwFz7e2vCBEPAYHuYaer1QsBk+7RnEudCwGT7tGcS50LAZPu0ZxLnQsBk+7RnEudCwGT7tGcS50LAbPvtY2LJQsBs++1jYslCwGz77WNiyULAbPvtY2LJQsBs++1jYslCwGz77WNiyULAbPvtY2LJQsBw+yZgsqtCwHD7JmCyq0LAcPsmYLKrQsBw+yZgsqtCwHD7JmCyq0LAdHtDXtqcQsB0e0Ne2pxCwHj7X1wCjkLAePtfXAKOQsB4+19cAo5CwHj7X1wCjkLAePtfXAKOQsCA+5hYUnBCwID7mFhScELAgPuYWFJwQsCA+5hYUnBCwID7mFhScELAgPuYWFJwQsCI+9FUolJCwIj70VSiUkLAiPvRVKJSQsCI+9FUolJCwIj70VSiUkLAiPvRVKJSQsCMe+5SykNCwJD7ClHyNELAkPsKUfI0QsCQ+wpR8jRCwJD7ClHyNELAkPsKUfI0QsCUeydPGiZCwJT7Q01CF0LAlPtDTUIXQsCU+0NNQhdCwJT7Q01CF0LAlPtDTUIXQsCYe2BLaghCwJz7fEmS+UHAnPt8SZL5QcCc+3xJkvlBwJz7fEmS+UHAnPt8SZL5QcCc+3xJkvlBwKT7tUXi20HApPu1ReLbQcCk+7VF4ttBwKT7tUXi20HApPu1ReLbQcCk+7VF4ttBwKh70kMKzUHArPvuQTK+QcCs++5BMr5BwKz77kEyvkHArPvuQTK+QcCs++5BMr5BwLT7Jz6CoEHAtPsnPoKgQcC0+yc+gqBBwLT7Jz6CoEHAtPsnPoKgQcC0+yc+gqBBwLT7Jz6CoEHAvPtgOtKCQcC8+2A60oJBwLz7YDrSgkHAvPtgOtKCQcC8+2A60oJBwLz7YDrSgkHAvHt9OPpzQcDA+5k2ImVBwMD7mTYiZUHAwPuZNiJlQcDA+5k2ImVBwMD7mTYiZUHAxHu2NEpWQcDI+9IyckdBwMj70jJyR0HAyPvSMnJHQcDI+9IyckdBwMj70jJyR0HAyPvSMnJHQcDQ+wsvwilBwND7Cy\u002fCKUHA0PsLL8IpQcDQ+wsvwilBwND7Cy\u002fCKUHA0PsLL8IpQcDQ+wsvwilBwNj7RCsSDEHA2PtEKxIMQcDY+0QrEgxBwNj7RCsSDEHA2PtEKxIMQcDce2EpOv1AwNx7YSk6\u002fUDA4Pt9J2LuQMDg+30nYu5AwOD7fSdi7kDA4Pt9J2LuQMDg+30nYu5AwOD7fSdi7kDA5Pu2I7LQQMDk+7YjstBAwOT7tiOy0EDA5Pu2I7LQQMDk+7YjstBAwOT7tiOy0EDA5Pu2I7LQQMDs++8fArNAwOz77x8Cs0DA7PvvHwKzQMDs++8fArNAwOz77x8Cs0DA8HsMHiqkQMDwewweKqRAwPT7KBxSlUDA9PsoHFKVQMD0+ygcUpVAwPT7KBxSlUDA9PsoHFKVQMD0+ygcUpVAwPz7YRiid0DA\u002fPthGKJ3QMD8+2EYondAwPz7YRiid0DA\u002fPthGKJ3QMD8+2EYondAwPz7YRiid0DABPyaFPJZQMAE\u002fJoU8llAwAT8mhTyWUDABPyaFPJZQMAE\u002fJoU8llAwAT8mhTyWUDACHy3EhpLQMAIfLcSGktAwAj80xBCPEDACPzTEEI8QMAI\u002fNMQQjxAwAj80xBCPEDACPzTEEI8QMAMfPAOai1AwBD8DA2SHkDAEPwMDZIeQMAQ\u002fAwNkh5AwBD8DA2SHkDAEPwMDZIeQMAQ\u002fAwNkh5AwBD8DA2SHkDAGPxFCeIAQMAY\u002fEUJ4gBAwBj8RQniAEDAGPxFCeIAQMAY\u002fEUJ4gBAwBj8RQniAEDAGPxFCeIAQMA4+MQOFOQ\u002fwED4\u002fQpkxj\u002fAQPj9CmTGP8BA+P0KZMY\u002fwED4\u002fQpkxj\u002fAQPj9CmTGP8BI+DYHtKg\u002fwEj4Nge0qD\u002fAUPhvAwSLP8BQ+G8DBIs\u002fwFD4bwMEiz\u002fAUPhvAwSLP8BQ+G8DBIs\u002fwFD4bwMEiz\u002fAYPjh+6NPP8Bg+OH7o08\u002fwGD44fujTz\u002fAYPjh+6NPP8Bg+OH7o08\u002fwGD44fujTz\u002fAYPjh+6NPP8Bg+OH7o08\u002fwGj4U\u002fRDFD\u002fAaPhT9EMUP8Bo+FP0QxQ\u002fwGj4U\u002fRDFD\u002fAaPhT9EMUP8Bo+FP0QxQ\u002fwHD4jPCT9j7AcPiM8JP2PsB4+MXs49g+wHj4xezj2D7AePjF7OPYPsB4+MXs49g+wHj4xezj2D7AePjF7OPYPsCI+Dflg50+wIj4N+WDnT7AiPg35YOdPsCI+Dflg50+wIj4N+WDnT7AiPg35YOdPsCI+Dflg50+wIj4N+WDnT7AmPip3SNiPsCY+KndI2I+wJj4qd0jYj7AmPip3SNiPsCY+KndI2I+wJj4qd0jYj7AmPip3SNiPsCg+OLZc0Q+wKD44tlzRD7AqPgb1sMmPsCo+BvWwyY+wKj4G9bDJj7AqPgb1sMmPsCo+BvWwyY+wKj4G9bDJj7AsPhU0hMJPsCw+I3OY+s9wLD4jc5j6z3AsPiNzmPrPcCw+I3OY+s9wLD4jc5j6z3AsPiNzmPrPcCw+I3OY+s9wMD4\u002f8YDsD3AwPj\u002fxgOwPcDA+P\u002fGA7A9wMD4\u002f8YDsD3AwPj\u002fxgOwPcDA+P\u002fGA7A9wMD4\u002f8YDsD3AwPj\u002fxgOwPcDI+DjDU5I9wND4cb+jdD3A0Phxv6N0PcDQ+HG\u002fo3Q9wND4cb+jdD3A0Phxv6N0PcDQ+HG\u002fo3Q9wNj4qrvzVj3A2Piqu\u002fNWPcDg+OO3Qzk9wOD447dDOT3A4Pjjt0M5PcDg+OO3Qzk9wOD447dDOT3A4Pjjt0M5PcDg+OO3Qzk9wPD4VbDj\u002fTzA8PhVsOP9PMDw+FWw4\u002f08wPD4VbDj\u002fTzA8PhVsOP9PMDw+FWw4\u002f08wPD4VbDj\u002fTzA8PhVsOP9PMDw+FWw4\u002f08wAD5x6iDwjzAAPnHqIPCPMAA+ceog8I8wAD5x6iDwjzAAPnHqIPCPMAA+ceog8I8wAD5x6iDwjzAAPkApdOkPMAA+QCl06Q8wAj5OaEjhzzACPk5oSOHPMAI+TmhI4c8wAj5OaEjhzzACPk5oSOHPMAI+TmhI4c8wBD5cp1zaTzAGPmrmcNLPMAY+auZw0s8wBj5q5nDSzzAGPmrmcNLPMAY+auZw0s8wBj5q5nDSzzAGPmrmcNLPMAY+auZw0s8wBj5q5nDSzzAKPkdkmMQPMAo+R2SYxA8wCj5HZJjEDzAKPkdkmMQPMAo+R2SYxA8wCj5HZJjEDzAKPkdkmMQPMAo+R2SYxA8wDD5Vo6z8jvAOPmPigPVO8A4+Y+KA9U7wDj5j4oD1TvAOPmPigPVO8A4+Y+KA9U7wDj5j4oD1TvAOPmPigPVO8BA+ciGU7c7wED5yIZTtzvASPkBg6OZO8BI+QGDo5k7wEj5AYOjmTvASPkBg6OZO8BI+QGDo5k7wEj5AYOjmTvASPkBg6OZO8BI+QGDo5k7wFD5c3tDXjvAUPlze0NeO8BQ+XN7Q147wFD5c3tDXjvAUPlze0NeO8BQ+XN7Q147wFD5c3tDXjvAUPlze0NeO8BQ+XN7Q147wFj5rHeTQDvAYPnlc+MiO8Bg+eVz4yI7wGD55XPjIjvAYPnlc+MiO8Bg+eVz4yI7wGD55XPjIjvAYPnlc+MiO8Bo+R5wMwU7wGj5HnAzBTvAcPlXbIPnOsBw+Vdsg+c6wHD5V2yD5zrAcPlXbIPnOsBw+Vdsg+c6wHD5V2yD5zrAcPlXbIPnOsBw+Vdsg+c6wID5yWQjrDrAgPnJZCOsOsCA+clkI6w6wID5yWQjrDrAgPnJZCOsOsCA+clkI6w6wID5yWQjrDrAgPnJZCOsOsCA+clkI6w6wID5yWQjrDrAkPk7XcNwOsCQ+Ttdw3A6wA=="},"type":"scatter"}],                        {"font":{"color":"#26312F","family":"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif","size":16},"hovermode":"x unified","legend":{"bgcolor":"rgba(255, 255, 255, 0.92)","bordercolor":"rgba(38, 49, 47, 0.16)","borderwidth":1,"font":{"color":"#26312F","family":"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif","size":14},"orientation":"v","x":1.02,"xanchor":"left","y":1,"yanchor":"top"},"margin":{"b":72,"l":78,"r":36,"t":72},"paper_bgcolor":"#FFFFFF","plot_bgcolor":"#FFFFFF","showlegend":false,"template":{"data":{"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}},"title":{"font":{"color":"#26312F","family":"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif","size":24},"text":"Seebeck coefficient vs energy"},"xaxis":{"gridcolor":"rgba(38, 49, 47, 0.12)","linecolor":"#26312F","showgrid":true,"showline":true,"tickcolor":"#26312F","tickfont":{"color":"#26312F","family":"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif","size":16},"ticks":"outside","title":{"font":{"color":"#26312F","family":"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif","size":20},"text":"E (eV)"},"zeroline":false,"zerolinecolor":"#26312F"},"yaxis":{"gridcolor":"rgba(38, 49, 47, 0.12)","linecolor":"#26312F","showgrid":true,"showline":true,"tickcolor":"#26312F","tickfont":{"color":"#26312F","family":"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif","size":16},"ticks":"outside","title":{"font":{"color":"#26312F","family":"\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif","size":20},"text":"S (μV\u002fK)"},"zeroline":false,"zerolinecolor":"#26312F"},"height":520},                        {"displaylogo": false, "displayModeBar": false, "editable": false, "edits": {"annotationPosition": true, "annotationTail": true, "annotationText": true, "axisTitleText": true, "legendText": true, "titleText": true}, "responsive": true, "scrollZoom": true, "toImageButtonOptions": {"format": "png", "filename": "seebeck_e", "scale": 2}}                    )                };            </script>        </div>
+    </div>
+  </section>
+  <script>
+    (() => {
+      const gd = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7");
+      const shell = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-shell");
+      const themeButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-theme");
+      const gridButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-grid");
+      const resetButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-reset");
+      const zeroButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-zero");
+      const textButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-text");
+      const arrowButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-arrow");
+      const clearSelectionButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-clear-selection");
+      const downloadButton = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-download");
+      const lineWidthSelect = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-width");
+      const lineWidthValue = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-width-value");
+      const lineStyleSelect = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-style");
+      const lineColorInput = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-line-color");
+      const xScaleSelect = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-x-scale");
+      const targetLabel = document.getElementById("magic-dorye-plot-6b1f5125ae6e4ba1bfb7b6b7001602a7-target");
+      const plotContainer = shell.querySelector(".plot-container");
+
+      const themes = {"light": {"name": "light", "plot_bgcolor": "#FFFFFF", "paper_bgcolor": "#FFFFFF", "page_background": "#F7F5EF", "font_color": "#26312F", "axis_color": "#26312F", "grid_color": "rgba(38, 49, 47, 0.12)", "legend_bgcolor": "rgba(255, 255, 255, 0.92)", "legend_bordercolor": "rgba(38, 49, 47, 0.16)", "toolbar_background": "#F7F5EF", "toolbar_border": "rgba(38, 49, 47, 0.14)", "toolbar_text": "#26312F", "button_background": "#FFFFFF", "button_border": "rgba(38, 49, 47, 0.16)", "button_hover": "#EEE9DE", "zero_line_color": "rgba(38, 49, 47, 0.42)"}, "dark": {"name": "dark", "plot_bgcolor": "#1A2A26", "paper_bgcolor": "#1A2A26", "page_background": "#0F1715", "font_color": "#F7F5EF", "axis_color": "#F7F5EF", "grid_color": "rgba(247, 245, 239, 0.14)", "legend_bgcolor": "rgba(26, 42, 38, 0.92)", "legend_bordercolor": "rgba(247, 245, 239, 0.14)", "toolbar_background": "#14211E", "toolbar_border": "rgba(38, 83, 72, 0.44)", "toolbar_text": "#F7F5EF", "button_background": "#1A2A26", "button_border": "rgba(74, 127, 113, 0.42)", "button_hover": "#223530", "zero_line_color": "rgba(247, 245, 239, 0.38)"}};
+      const axisKeys = Object.keys(gd.layout).filter(
+        (key) => /^(xaxis|yaxis)\d*$/.test(key)
+      );
+      const baseShapes = [];
+      const zeroShapes = {"light": [{"type": "line", "xref": "x domain", "yref": "y", "x0": 0, "x1": 1, "y0": 0, "y1": 0, "line": {"color": "rgba(38, 49, 47, 0.42)", "width": 1, "dash": "dot"}, "layer": "above"}], "dark": [{"type": "line", "xref": "x domain", "yref": "y", "x0": 0, "x1": 1, "y0": 0, "y1": 0, "line": {"color": "rgba(247, 245, 239, 0.38)", "width": 1, "dash": "dot"}, "layer": "above"}]};
+      const lineTraceIndices = [0];
+      const customLineColorIndices = new Set();
+      const state = {
+        theme: "light",
+        showGrid: true,
+        showZeroLine: false,
+        interactionMode: null,
+        arrowStart: null,
+        selectedTraceIndex: null,
+        xScale: 1.0,
+      };
+
+      function updateToolbarLabels() {
+        themeButton.textContent = state.theme === "light" ? "Dark Mode" : "Light Mode";
+        gridButton.textContent = state.showGrid ? "Hide Grid" : "Show Grid";
+        zeroButton.textContent = state.showZeroLine ? "Remove Zero Line" : "Add Zero Line";
+        textButton.textContent = state.interactionMode === "text" ? "Cancel Text" : "Add Text";
+        arrowButton.textContent =
+          state.interactionMode === "arrow" && state.arrowStart
+            ? "Pick Arrow End"
+            : state.interactionMode === "arrow"
+              ? "Cancel Arrow"
+              : "Add Arrow";
+        textButton.classList.toggle("is-active", state.interactionMode === "text");
+        arrowButton.classList.toggle("is-active", state.interactionMode === "arrow");
+        clearSelectionButton.classList.toggle("is-active", state.selectedTraceIndex === null);
+        if (state.selectedTraceIndex === null) {
+          targetLabel.textContent = "Target: all traces";
+        } else {
+          const trace = gd.data[state.selectedTraceIndex];
+          const traceName = trace && trace.name ? trace.name : `trace ${state.selectedTraceIndex + 1}`;
+          targetLabel.textContent = `Target: ${traceName}`;
+        }
+        updateLineColorInput();
+      }
+
+      function rgbChannelsToHex(channels) {
+        return `#${channels
+          .map((value) => Math.max(0, Math.min(255, Math.round(value))))
+          .map((value) => value.toString(16).padStart(2, "0"))
+          .join("")}`;
+      }
+
+      function colorToHex(color) {
+        const rgb = parseColor(color);
+        if (rgb) {
+          return rgbChannelsToHex(rgb);
+        }
+
+        if (typeof document === "undefined" || !document.body) {
+          return null;
+        }
+
+        const probe = document.createElement("span");
+        probe.style.color = color;
+        probe.style.display = "none";
+        document.body.appendChild(probe);
+        const computed = window.getComputedStyle(probe).color;
+        document.body.removeChild(probe);
+        const computedRgb = parseColor(computed);
+        return computedRgb ? rgbChannelsToHex(computedRgb) : null;
+      }
+
+      function defaultToolbarLineColor() {
+        return state.theme === "light" ? "#000000" : "#ffffff";
+      }
+
+      function currentTargetLineColor() {
+        const targetIndex =
+          state.selectedTraceIndex === null ? lineTraceIndices[0] : state.selectedTraceIndex;
+        if (typeof targetIndex !== "number") {
+          return defaultToolbarLineColor();
+        }
+
+        const trace = gd.data[targetIndex];
+        if (!trace || !trace.line || !trace.line.color) {
+          return defaultToolbarLineColor();
+        }
+
+        return colorToHex(trace.line.color) || defaultToolbarLineColor();
+      }
+
+      function updateLineColorInput() {
+        if (!lineColorInput) {
+          return;
+        }
+        lineColorInput.value = currentTargetLineColor();
+      }
+
+      function parseColor(color) {
+        if (typeof color !== "string") {
+          return null;
+        }
+
+        const normalized = color.trim().toLowerCase();
+        if (normalized === "white") {
+          return [255, 255, 255];
+        }
+        if (normalized === "black") {
+          return [0, 0, 0];
+        }
+        if (normalized.startsWith("#")) {
+          const hex = normalized.slice(1);
+          if (hex.length === 3) {
+            return hex.split("").map((value) => parseInt(value + value, 16));
+          }
+          if (hex.length === 6) {
+            return [
+              parseInt(hex.slice(0, 2), 16),
+              parseInt(hex.slice(2, 4), 16),
+              parseInt(hex.slice(4, 6), 16),
+            ];
+          }
+        }
+
+        const match = normalized.match(/rgba?\(([^)]+)\)/);
+        if (!match) {
+          return null;
+        }
+
+        const channels = match[1]
+          .split(",")
+          .slice(0, 3)
+          .map((value) => Number.parseFloat(value.trim()));
+
+        if (channels.some((value) => Number.isNaN(value))) {
+          return null;
+        }
+
+        return channels;
+      }
+
+      function isThemeSwappableMonochrome(color) {
+        const rgb = parseColor(color);
+        if (!rgb) {
+          return false;
+        }
+
+        const average = (rgb[0] + rgb[1] + rgb[2]) / 3;
+        return average <= 25 || average >= 240;
+      }
+
+      function applyTraceTheme() {
+        const lineColor = state.theme === "light" ? "#000000" : "#ffffff";
+        const traceUpdates = [];
+
+        gd.data.forEach((trace, index) => {
+          if (customLineColorIndices.has(index)) {
+            return;
+          }
+          const updates = {};
+
+          if (trace.line && isThemeSwappableMonochrome(trace.line.color)) {
+            updates["line.color"] = lineColor;
+          }
+
+          if (
+            trace.marker &&
+            trace.marker.line &&
+            isThemeSwappableMonochrome(trace.marker.line.color)
+          ) {
+            updates["marker.line.color"] = lineColor;
+          }
+
+          if (Object.keys(updates).length > 0) {
+            traceUpdates.push([updates, [index]]);
+          }
+        });
+
+        for (const [updates, indices] of traceUpdates) {
+          Plotly.restyle(gd, updates, indices);
+        }
+      }
+
+      function themeAnnotations(annotations) {
+        const lineColor = state.theme === "light" ? "#000000" : "#ffffff";
+        return (annotations || []).map((annotation) => {
+          const updated = Object.assign({}, annotation);
+          updated.font = Object.assign({}, updated.font || {}, {
+            family: "\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif",
+            color: lineColor,
+          });
+          if (updated.showarrow) {
+            updated.arrowcolor = lineColor;
+          }
+          return updated;
+        });
+      }
+
+      function setAnnotations(annotations) {
+        Plotly.relayout(gd, {
+          annotations: themeAnnotations(annotations),
+        });
+      }
+
+      function cancelInteraction() {
+        state.interactionMode = null;
+        state.arrowStart = null;
+        gd.style.cursor = "";
+        updateToolbarLabels();
+      }
+
+      function setInteractionMode(mode) {
+        if (state.interactionMode === mode) {
+          cancelInteraction();
+          return;
+        }
+        state.interactionMode = mode;
+        state.arrowStart = null;
+        gd.style.cursor = "crosshair";
+        updateToolbarLabels();
+      }
+
+      function axisReference(point, axisName) {
+        const axis = point[axisName];
+        if (!axis || !axis._id) {
+          return axisName === "xaxis" ? "x" : "y";
+        }
+        return axis._id;
+      }
+
+      function targetTraceIndices() {
+        return state.selectedTraceIndex === null
+          ? lineTraceIndices
+          : [state.selectedTraceIndex];
+      }
+
+      function selectTrace(index) {
+        if (!lineTraceIndices.includes(index)) {
+          state.selectedTraceIndex = null;
+          updateToolbarLabels();
+          return;
+        }
+        state.selectedTraceIndex = index;
+        updateToolbarLabels();
+      }
+
+      function addTextAnnotation(point) {
+        const text = window.prompt("Annotation text:", "");
+        if (!text) {
+          cancelInteraction();
+          return;
+        }
+
+        const annotations = (gd.layout.annotations || []).slice();
+        annotations.push({
+          x: point.x,
+          y: point.y,
+          xref: axisReference(point, "xaxis"),
+          yref: axisReference(point, "yaxis"),
+          text: text,
+          showarrow: false,
+          bgcolor: state.theme === "light"
+            ? "rgba(255,255,255,0.88)"
+            : "rgba(13,20,32,0.88)",
+          bordercolor: state.theme === "light"
+            ? "rgba(17,24,39,0.18)"
+            : "rgba(245,247,251,0.18)",
+          borderwidth: 1,
+          borderpad: 4,
+        });
+        setAnnotations(annotations);
+        cancelInteraction();
+      }
+
+      function addArrowAnnotation(point) {
+        if (!state.arrowStart) {
+          state.arrowStart = {
+            x: point.x,
+            y: point.y,
+            xref: axisReference(point, "xaxis"),
+            yref: axisReference(point, "yaxis"),
+          };
+          updateToolbarLabels();
+          return;
+        }
+
+        const label = window.prompt("Arrow label (optional):", "") || "";
+        const annotations = (gd.layout.annotations || []).slice();
+        annotations.push({
+          x: point.x,
+          y: point.y,
+          xref: axisReference(point, "xaxis"),
+          yref: axisReference(point, "yaxis"),
+          ax: state.arrowStart.x,
+          ay: state.arrowStart.y,
+          axref: state.arrowStart.xref,
+          ayref: state.arrowStart.yref,
+          text: label,
+          showarrow: true,
+          arrowhead: 3,
+          arrowsize: 1,
+          arrowwidth: 2,
+        });
+        setAnnotations(annotations);
+        cancelInteraction();
+      }
+
+      function buildThemeRelayout() {
+        const theme = themes[state.theme];
+        const currentAnnotations = themeAnnotations(gd.layout.annotations || []);
+        const updates = {
+          paper_bgcolor: theme.paper_bgcolor,
+          plot_bgcolor: theme.plot_bgcolor,
+          "font.color": theme.font_color,
+          "title.font.color": theme.font_color,
+          "legend.bgcolor": theme.legend_bgcolor,
+          "legend.bordercolor": theme.legend_bordercolor,
+          "legend.font.color": theme.font_color,
+          annotations: currentAnnotations,
+          shapes: state.showZeroLine
+            ? baseShapes.concat(zeroShapes[state.theme])
+            : baseShapes,
+        };
+
+        for (const axisKey of axisKeys) {
+          updates[`${axisKey}.showgrid`] = state.showGrid;
+          updates[`${axisKey}.gridcolor`] = state.showGrid
+            ? theme.grid_color
+            : "rgba(0,0,0,0)";
+          updates[`${axisKey}.linecolor`] = theme.axis_color;
+          updates[`${axisKey}.tickcolor`] = theme.axis_color;
+          updates[`${axisKey}.zerolinecolor`] = theme.axis_color;
+          updates[`${axisKey}.tickfont.color`] = theme.font_color;
+          updates[`${axisKey}.title.font.color`] = theme.font_color;
+        }
+
+        return updates;
+      }
+
+      function applyState() {
+        shell.dataset.theme = state.theme;
+        document.body.dataset.theme = state.theme;
+        document.body.style.setProperty(
+          "--page-background",
+          themes[state.theme].page_background
+        );
+        updateToolbarLabels();
+        Plotly.relayout(gd, buildThemeRelayout());
+        applyTraceTheme();
+      }
+
+      function resetView() {
+        const updates = {};
+        for (const axisKey of axisKeys) {
+          updates[`${axisKey}.autorange`] = true;
+        }
+        Plotly.relayout(gd, updates);
+      }
+
+      function updateHorizontalScale(scale) {
+        if (!xScaleSelect) {
+          return;
+        }
+
+        const numericScale = Math.min(Math.max(Number(scale), 0.2), 1.0);
+        if (!Number.isFinite(numericScale)) {
+          return;
+        }
+
+        state.xScale = numericScale;
+        if (plotContainer) {
+          plotContainer.style.width = `${numericScale * 100}%`;
+          plotContainer.style.maxWidth = "100%";
+        }
+        gd.style.width = "100%";
+        if (
+          window.Plotly &&
+          window.Plotly.Plots &&
+          typeof window.Plotly.Plots.resize === "function"
+        ) {
+          window.Plotly.Plots.resize(gd);
+        }
+      }
+
+      function updateLineWidth(width) {
+        const targetIndices = targetTraceIndices();
+        if (targetIndices.length === 0) {
+          return;
+        }
+        lineWidthValue.textContent = width;
+        Plotly.restyle(gd, {"line.width": Number(width)}, targetIndices);
+      }
+
+      function updateLineStyle(style) {
+        const targetIndices = targetTraceIndices();
+        if (targetIndices.length === 0) {
+          return;
+        }
+        Plotly.restyle(gd, {"line.dash": style}, targetIndices);
+      }
+
+      function updateLineColor(color) {
+        const targetIndices = targetTraceIndices();
+        if (targetIndices.length === 0) {
+          return;
+        }
+        targetIndices.forEach((index) => customLineColorIndices.add(index));
+        Plotly.restyle(gd, {"line.color": color}, targetIndices);
+        updateLineColorInput();
+      }
+
+      themeButton.addEventListener("click", () => {
+        state.theme = state.theme === "light" ? "dark" : "light";
+        applyState();
+      });
+
+      gridButton.addEventListener("click", () => {
+        state.showGrid = !state.showGrid;
+        applyState();
+      });
+
+      zeroButton.addEventListener("click", () => {
+        state.showZeroLine = !state.showZeroLine;
+        applyState();
+      });
+
+      textButton.addEventListener("click", () => {
+        setInteractionMode("text");
+      });
+
+      arrowButton.addEventListener("click", () => {
+        setInteractionMode("arrow");
+      });
+
+      clearSelectionButton.addEventListener("click", () => {
+        state.selectedTraceIndex = null;
+        updateToolbarLabels();
+      });
+
+      resetButton.addEventListener("click", resetView);
+      lineWidthSelect.addEventListener("input", (event) => {
+        updateLineWidth(event.target.value);
+      });
+      lineStyleSelect.addEventListener("change", (event) => {
+        updateLineStyle(event.target.value);
+      });
+      lineColorInput.addEventListener("input", (event) => {
+        updateLineColor(event.target.value);
+      });
+      if (xScaleSelect) {
+        xScaleSelect.addEventListener("change", (event) => {
+          updateHorizontalScale(event.target.value);
+        });
+      }
+
+      downloadButton.addEventListener("click", () => {
+        Plotly.downloadImage(gd, {
+          format: "png",
+          filename: "seebeck_e",
+          scale: 2,
+        });
+      });
+
+      gd.on("plotly_click", (eventData) => {
+        if (!state.interactionMode || !eventData || !eventData.points || !eventData.points.length) {
+          if (eventData && eventData.points && eventData.points.length) {
+            selectTrace(eventData.points[0].curveNumber);
+          }
+          return;
+        }
+
+        const point = eventData.points[0];
+        selectTrace(point.curveNumber);
+        if (state.interactionMode === "text") {
+          addTextAnnotation(point);
+          return;
+        }
+
+        if (state.interactionMode === "arrow") {
+          addArrowAnnotation(point);
+        }
+      });
+
+      gd.on("plotly_legendclick", (eventData) => {
+        if (eventData && typeof eventData.curveNumber === "number") {
+          selectTrace(eventData.curveNumber);
+        }
+        return true;
+      });
+
+      document.body.dataset.theme = state.theme;
+      updateToolbarLabels();
+      updateLineWidth(lineWidthSelect.value);
+      updateLineStyle(lineStyleSelect.value);
+      updateLineColorInput();
+      if (xScaleSelect) {
+        updateHorizontalScale(xScaleSelect.value);
+      }
+      applyState();
+    })();
+  </script>
+<script>
+/* Apeiron demo: sync plot theme with parent app via ?theme= or postMessage */
+(function () {
+  function btn() { return document.querySelector('[id$="-theme"]'); }
+  function current() { var b = btn(); return b && /Light Mode/.test(b.textContent) ? 'dark' : 'light'; }
+  function setTheme(t) { var b = btn(); if (b && current() !== t) b.click(); }
+  function fromUrl() { try { var p = new URLSearchParams(location.search).get('theme'); if (p === 'dark' || p === 'light') setTheme(p); } catch (e) {} }
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (d && d.type === 'apeiron-theme' && (d.theme === 'dark' || d.theme === 'light')) setTheme(d.theme);
+  });
+  if (document.readyState === 'complete') setTimeout(fromUrl, 60);
+  else window.addEventListener('load', function () { setTimeout(fromUrl, 60); });
+})();
+</script>
+
+<script>
+/* Apeiron demo: report content height to parent so the iframe fits its bubble */
+(function () {
+  function h() {
+    var b = document.body, e = document.documentElement;
+    return Math.max(b.scrollHeight, b.offsetHeight, e.scrollHeight, e.offsetHeight);
+  }
+  function post() { try { parent.postMessage({ type: 'apeiron-height', h: h() }, '*'); } catch (e) {} }
+  window.addEventListener('load', function () { [120, 400, 900, 1600, 2600, 4200, 6500].forEach(function (t) { setTimeout(post, t); }); });
+  window.addEventListener('resize', post);
+  try { new ResizeObserver(post).observe(document.body); } catch (e) {}
+})();
+</script>
+
+</body>
+</html>
