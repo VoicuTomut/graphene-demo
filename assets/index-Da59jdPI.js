@@ -85,7 +85,7 @@ At 1550 nm with a photo-thermoelectric readout, the alternatives rule themselves
 
 Take away any one of them and you do not have a worse version of your detector; you have a different detector.
 
-So the search says stay on graphene. It is still your call, and it fixes everything downstream — every calculation in Job 2 runs on whatever you pick. **Hold at graphene, or open the material up?**`}},{panel:"panelMD",step:{kind:"user",text:`Go with graphene. Two reasons: the transfer and the contacts are already qualified on our line, so it costs us nothing to stay. And that Seebeck sign change is why we chose this architecture in the first place — without it we would be building a different detector, not a better one.`}},{panel:"panelMD",step:{kind:"agent-text",text:`Graphene it is. Job 2 runs on it, and the device space stands as proposed.
+So the search says stay on graphene. It is still your call, and it fixes everything downstream — every calculation in Job 2 runs on whatever you pick. **Hold at graphene, or open the material up?**`}},{panel:"panelMD",step:{kind:"user",text:`OK, go with graphene.`}},{panel:"panelMD",step:{kind:"agent-text",text:`Graphene it is. Job 2 runs on it, and the device space stands as proposed.
 
 ### Second result — dielectric parameters
 
